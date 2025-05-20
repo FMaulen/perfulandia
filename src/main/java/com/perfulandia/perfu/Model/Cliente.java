@@ -15,7 +15,6 @@ import java.util.Date;
 @NoArgsConstructor
 
 @Entity
-
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +23,6 @@ public class Cliente {
     private String mail;
     private String direccion;
     private String telefono;
-    public Date fecha_registro;
+    private Date fecha_registro;
 }
 
