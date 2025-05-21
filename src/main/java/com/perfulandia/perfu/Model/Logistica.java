@@ -1,43 +1,24 @@
 package com.perfulandia.perfu.Model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.JoinColumn;
-
-import java.util.HashSet;
+import lombok.EqualsAndHashCode;
 import java.util.Set;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-
+@EqualsAndHashCode(callSuper = true)
 @Entity
-public class Logistica {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_logistica;
-
-    private String nombre;
-    private String email;
+@DiscriminatorValue("LOGISTICA")
+public class Logistica extends Usuario {
     private String especialidad;
 
-    // Relacion N-N con proveedor
     @ManyToMany
     @JoinTable(
-            name = "logistica_sucursal", // Tabla intermedia
-            joinColumns = @JoinColumn(name = "id_logistica"), // Columna FK en la tabla intermedia que apunta a logistica
-            inverseJoinColumns = @JoinColumn(name = "id_proveedor") // Columna FK en la tabla intermedia que apunta a proveedor
+            name = "logistica_proveedor",
+            joinColumns = @JoinColumn(name = "logistica_id"),
+            inverseJoinColumns = @JoinColumn(name = "proveedor_id")
     )
-    private Set<Proveedor> proveedores = new HashSet<>();
+    private Set<Proveedor> proveedores;
 }
 
 // como vai a dejar el proyecto abierto

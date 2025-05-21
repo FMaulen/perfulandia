@@ -1,29 +1,15 @@
 package com.perfulandia.perfu.Model;
 
-
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
-import java.util.Date;
-
+import lombok.EqualsAndHashCode;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-
+@EqualsAndHashCode(callSuper = true)
 @Entity
-public class AdministradorSistema {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String nombre;
-    private String email;
-    private Date fecha_creacion;
+@DiscriminatorValue("ADMIN")
+public class AdministradorSistema extends Usuario {
+    private String nivelAcceso;
+    private boolean puedeCrearUsuarios = true;
+    private boolean puedeConfigurarPermisos = true;
 }

@@ -1,35 +1,18 @@
 package com.perfulandia.perfu.Model;
 
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
+import lombok.EqualsAndHashCode;
 import java.util.Date;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-
+@EqualsAndHashCode(callSuper = true)
 @Entity
-public class GerenteSucursal {
+@DiscriminatorValue("GERENTE")
+public class GerenteSucursal extends Usuario {
+    @ManyToOne
+    @JoinColumn(name = "sucursal_id")
+    private Sucursal sucursalAsignada;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_gerente_sucursal;
-
-    private String nombre;
-    private String correo;
-    private Date fecha_contratacion;
-
-    @OneToOne
-    @JoinColumn(name = "id_sucursal", unique = true)
-    private Sucursal sucursal;
+    private Date fechaContratacion;
 }
