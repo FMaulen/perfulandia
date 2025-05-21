@@ -8,6 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -18,10 +24,20 @@ public class Logistica {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int id_logistica;
+
     private String nombre;
     private String email;
     private String especialidad;
+
+    // Relacion N-N con proveedor
+    @ManyToMany
+    @JoinTable(
+            name = "logistica_sucursal", // Tabla intermedia
+            joinColumns = @JoinColumn(name = "id_logistica"), // Columna FK en la tabla intermedia que apunta a logistica
+            inverseJoinColumns = @JoinColumn(name = "id_proveedor") // Columna FK en la tabla intermedia que apunta a proveedor
+    )
+    private Set<Proveedor> proveedores = new HashSet<>();
 }
 
 // como vai a dejar el proyecto abierto

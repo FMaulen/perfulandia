@@ -10,6 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 @Data
 @AllArgsConstructor
@@ -17,11 +20,16 @@ import jakarta.persistence.GenerationType;
 
 @Entity
 public class GerenteSucursal {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id_gerente_sucursal;
+
     private String nombre;
-    private String email;
-    // Id Sucursal FK
+    private String correo;
     private Date fecha_contratacion;
+
+    @OneToOne
+    @JoinColumn(name = "id_sucursal", unique = true)
+    private Sucursal sucursal;
 }

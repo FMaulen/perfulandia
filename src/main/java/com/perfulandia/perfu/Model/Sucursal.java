@@ -1,9 +1,6 @@
 package com.perfulandia.perfu.Model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,4 +20,7 @@ public class Sucursal {
     private String direccion;
     private String telefono;
     private String email;
+
+    @OneToOne(mappedBy = "sucursal", cascade = CascadeType.ALL)
+    private GerenteSucursal gerente_sucursal;
 }
