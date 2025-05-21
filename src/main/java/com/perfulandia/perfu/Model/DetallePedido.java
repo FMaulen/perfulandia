@@ -1,9 +1,6 @@
 package com.perfulandia.perfu.Model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -25,4 +22,15 @@ public class DetallePedido {
     private int precio_unitario;
     private int descuento;
 
+    // Relacion OneToOne con Pedido
+    // DetallePedido es el lado propietario
+    @OneToOne
+    @JoinColumn(name = "id_pedido")
+    private Pedido pedido;
+
+    // Relacion ManyToOne con Producto
+    // DetallePedido es el lado propietario
+    @ManyToOne
+    @JoinColumn(name = "id_producto")
+    private Producto producto;
 }

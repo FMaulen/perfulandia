@@ -29,6 +29,8 @@ public class GerenteSucursal {
     private String correo;
     private Date fecha_contratacion;
 
+
+    // Relacion OneToOne con Sucursal
     @OneToOne
     @JoinColumn(name = "id_sucursal", unique = true)
     private Sucursal sucursal;

@@ -1,15 +1,9 @@
 package com.perfulandia.perfu.Model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,7 +31,13 @@ public class Proveedor {
     @ManyToMany(mappedBy = "proveedores") // "proveedores" es el nombre del Set en la clase Logistica
     private Set<Logistica> logisticas = new HashSet<>();
 
-    // @ManyToMany a Producto
+/*    // @ManyToMany a Producto
     @ManyToMany(mappedBy = "proveedores")
     private Set<Producto> productos = new HashSet<>();
+*/
+
+    // Relacion OneToMany con Producto
+    // Proveedor es el lado inverso
+    @OneToMany(mappedBy = "proveedor")
+    private Set<Producto> productosProveedor = new HashSet<>();
 }

@@ -1,16 +1,15 @@
 package com.perfulandia.perfu.Model;
 
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Data
@@ -22,8 +21,12 @@ public class AdministradorSistema {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int id_administrador_sistema;
     private String nombre;
-    private String email;
-    private Date fecha_creacion;
+    private String correo;
+    private Date fecha_registro;
+
+    // Relacion OneToMany con Sucursal
+    @OneToMany(mappedBy = "administradorSistema")
+    private Set<Sucursal> sucursales = new HashSet<>();
 }

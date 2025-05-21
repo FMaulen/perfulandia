@@ -1,9 +1,6 @@
 package com.perfulandia.perfu.Model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -21,12 +18,20 @@ import java.util.Date;
 public class Resena {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    // id_resena
-    // id_producto
+    private int id_resena;
     private String calificacion;
     private String comentario;
     private Date fecha_resena;
 
+    // Relacion ManyToOne con cliente
+    // Resena es el lado propietario
+    @ManyToOne
+    @JoinColumn(name = "id_cliente")
+    private Cliente cliente;
 
+    // Relacion ManyToOne con producto
+    // Resena es el lado propietario
+    @ManyToOne
+    @JoinColumn(name = "id_producto")
+    private Producto producto;
 }
