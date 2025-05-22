@@ -23,11 +23,12 @@ public class ClienteServices {
     public String listarClientes(){
         String output = "";
         for(Cliente cliente : clienteRepository.findAll()){
-            output += "ID Cliente: "+cliente.getId() + "\n";
+            output += "ID Cliente: "+cliente.getId_cliente() + "\n";
             output += "Nombre: "+cliente.getNombre() + "\n";
-            output += "Correo: "+cliente.getMail() + "\n";
+            output += "Correo: "+cliente.getCorreo() + "\n";
             output += "Telefono: "+cliente.getTelefono() + "\n";
             output += "Fecha Registro: "+cliente.getFecha_registro() + "\n";
+            output += "Estado: "+ (cliente.getHabilitado() ? "Habilitado" : "Deshabilitado") + "\n";
         }
 
         if (output.isEmpty()){
@@ -42,11 +43,12 @@ public class ClienteServices {
         String output = "";
         if(clienteRepository.existsById(id)){
             Cliente cliente = clienteRepository.findById(id).get();
-            output += "ID Cliente: "+cliente.getId() + "\n";
+            output += "ID Cliente: "+cliente.getId_cliente() + "\n";
             output += "Nombre: "+cliente.getNombre() + "\n";
-            output += "Correo: "+cliente.getMail() + "\n";
+            output += "Correo: "+cliente.getCorreo() + "\n";
             output += "Telefono: "+cliente.getTelefono() + "\n";
             output += "Fecha Registro: "+cliente.getFecha_registro() + "\n";
+            output += "Estado: "+ (cliente.getHabilitado() ? "Habilitado" : "Deshabilitado") + "\n";
             return output;
         }else{
             return "No existe un cliente con ese ID";
@@ -69,13 +71,25 @@ public class ClienteServices {
         if(clienteRepository.existsById(id)){
             Cliente buscado = clienteRepository.findById(id).get();
             buscado.setNombre(cliente.getNombre());
-            buscado.setMail(cliente.getMail());
+            buscado.setCorreo(cliente.getCorreo());
             buscado.setTelefono(cliente.getTelefono());
             buscado.setFecha_registro(cliente.getFecha_registro());
             buscado.setDireccion(cliente.getDireccion());
+            buscado.setHabilitado(cliente.getHabilitado());
             clienteRepository.save(buscado);
             return "Cliente actualizado correctamente";
         }else{
+            return "No existe un cliente con ese ID";
+        }
+    }
+
+    public String cambiarEstadoCliente(int id, boolean habilitado){
+        if (clienteRepository.existsById(id)){
+            Cliente cliente = clienteRepository.findById(id).get();
+            cliente.setHabilitado(habilitado);
+            clienteRepository.save(cliente);
+            return "Estado del cliente cambiado a: " + (habilitado ? "Habilitado" : "Deshabilitado");
+        } else {
             return "No existe un cliente con ese ID";
         }
     }

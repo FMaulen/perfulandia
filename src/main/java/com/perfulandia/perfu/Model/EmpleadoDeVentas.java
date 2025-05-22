@@ -1,13 +1,9 @@
 package com.perfulandia.perfu.Model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
 import java.util.Date;
 
@@ -19,9 +15,18 @@ import java.util.Date;
 public class EmpleadoDeVentas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int id_empleado_ventas;
     private String nombre;
-    private String email;
-    // ID sucursal FK
+    private String correo;
     private Date fecha_contratacion;
+
+   // Relacion ManyToOne con Sucursal
+   // EmpleadoDeVentas es el lado propietario
+    @ManyToOne
+    @JoinColumn(name = "id_sucursal")
+    private Sucursal sucursal;
+
+    @ManyToOne
+    @JoinColumn(name = "id_sucursal_contrato")
+    private Sucursal sucursalContrato;
 }

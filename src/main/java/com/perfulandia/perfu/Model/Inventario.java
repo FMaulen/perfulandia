@@ -1,13 +1,9 @@
 package com.perfulandia.perfu.Model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
 @Data
 @AllArgsConstructor
@@ -15,6 +11,7 @@ import jakarta.persistence.GenerationType;
 
 @Entity
 public class Inventario {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -22,4 +19,16 @@ public class Inventario {
     // id producto FK
     private int cantidad;
     private int stock_minimo;
+
+    // Relacion OneToOne con Sucursal
+    // Inventario es el lado propietario
+    @ManyToOne
+    @JoinColumn(name = "id_sucursal")
+    private Sucursal sucursal;
+
+    @ManyToOne
+    @JoinColumn(name = "id_producto")
+    private Producto producto;
+
+
 }
