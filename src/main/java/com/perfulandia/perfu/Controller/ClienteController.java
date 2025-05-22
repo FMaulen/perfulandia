@@ -22,9 +22,18 @@ public class ClienteController {
     public String getClientePorID(@PathVariable int id){return clienteServices.obtenerClientePorID(id);}
 
     @DeleteMapping("/{id}")
-    public String deleteClientePorID(@PathVariable int id, @RequestBody Cliente cliente){return clienteServices.actualizarCliente(id, cliente);}
+    public String deleteClientePorID(@PathVariable int id, @RequestBody Cliente cliente){return clienteServices.eliminarClientePorID(id);} // Fix
 
     @PutMapping("/{id}")
-    public String updateClientePorID(@PathVariable int id, @RequestBody Cliente cliente){return clienteServices.actualizarCliente(id, cliente);}
+    public String updateClientePorID(@PathVariable int id, @RequestBody Cliente cliente){
+        return clienteServices.actualizarCliente(id, cliente);
+    }
+
+    @PatchMapping("/{id}/estado")
+    public String cambiarEstadoCliente(@PathVariable int id, @RequestParam boolean habilitado){
+        return clienteServices.cambiarEstadoCliente(id, habilitado);
+    }
+
+
 }
 // No se como lo hice

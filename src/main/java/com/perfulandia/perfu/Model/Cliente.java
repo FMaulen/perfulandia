@@ -23,6 +23,7 @@ public class Cliente {
     private String direccion;
     private String telefono;
     private Date fecha_registro;
+    private Boolean habilitado;
 
     // Relacion OneToMany con Pedido
     // Cliente es el lado inverso
