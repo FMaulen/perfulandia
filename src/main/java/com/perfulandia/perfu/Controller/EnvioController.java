@@ -27,7 +27,7 @@ public class EnvioController {
 
     // Obtener envío por ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerEnvio(@PathVariable Long id) {
+    public ResponseEntity<?> obtenerEnvio(@PathVariable int id) {
         try {
             return ResponseEntity.ok(envioService.obtenerEnvioPorId(id));
         } catch (Exception e) {
@@ -48,7 +48,7 @@ public class EnvioController {
     // Actualizar estado del envío
     @PutMapping("/{id}/estado")
     public ResponseEntity<?> actualizarEstado(
-            @PathVariable Long id,
+            @PathVariable int id,
             @RequestBody String nuevoEstado) {
         try {
             Envio envioActualizado = envioService.actualizarEstadoEnvio(id, nuevoEstado);
@@ -61,13 +61,13 @@ public class EnvioController {
 
     // Listar envíos por sucursal origen
     @GetMapping("/origen/{idSucursal}")
-    public ResponseEntity<?> listarPorSucursalOrigen(@PathVariable Long idSucursal) {
+    public ResponseEntity<?> listarPorSucursalOrigen(@PathVariable int idSucursal) {
         return ResponseEntity.ok(envioService.listarEnviosPorSucursalOrigen(idSucursal));
     }
 
     // Listar envíos por sucursal destino
     @GetMapping("/destino/{idSucursal}")
-    public ResponseEntity<?> listarPorSucursalDestino(@PathVariable Long idSucursal) {
+    public ResponseEntity<?> listarPorSucursalDestino(@PathVariable int idSucursal) {
         return ResponseEntity.ok(envioService.listarEnviosPorSucursalDestino(idSucursal));
     }
 

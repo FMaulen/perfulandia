@@ -16,7 +16,7 @@ import java.util.List;
 public class Envio {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Long id_envio;
+   private int id_envio;
 
    private String numero_seguimiento;
    private Date fecha_envio;

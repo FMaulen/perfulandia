@@ -19,13 +19,12 @@ public class EnvioService {
     public Envio crearEnvio(Envio envio) {
         envio.setFecha_envio(new Date());
         envio.setEstado("PENDIENTE");
-        // Generar número de seguimiento único
         envio.setNumero_seguimiento("ENV-" + System.currentTimeMillis());
         return envioRepository.save(envio);
     }
 
     // Obtener envío por ID
-    public Envio obtenerEnvioPorId(Long id) {
+    public Envio obtenerEnvioPorId(int id) {
         return envioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Envío no encontrado"));
     }
@@ -37,19 +36,19 @@ public class EnvioService {
     }
 
     // Actualizar estado del envío
-    public Envio actualizarEstadoEnvio(Long id, String nuevoEstado) {
+    public Envio actualizarEstadoEnvio(int id, String nuevoEstado) {
         Envio envio = obtenerEnvioPorId(id);
         envio.setEstado(nuevoEstado);
         return envioRepository.save(envio);
     }
 
     // Listar envíos por sucursal origen
-    public List<Envio> listarEnviosPorSucursalOrigen(Long idSucursal) {
+    public List<Envio> listarEnviosPorSucursalOrigen(int idSucursal) {
         return envioRepository.findBySucursalOrigenId(idSucursal);
     }
 
     // Listar envíos por sucursal destino
-    public List<Envio> listarEnviosPorSucursalDestino(Long idSucursal) {
+    public List<Envio> listarEnviosPorSucursalDestino(int idSucursal) {
         return envioRepository.findBySucursalDestinoId(idSucursal);
     }
 

@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface EnvioRepository extends JpaRepository<Envio, Long> {
-    List<Envio> findBySucursalOrigenId(Long id_sucursal);
-    List<Envio> findBySucursalDestinoId(Long id_sucursal);
-    List<Envio> findByClienteId(Long id_cliente);
+public interface EnvioRepository extends JpaRepository<Envio, Integer> {
+    List<Envio> findBySucursalOrigenId(int id_sucursal);
+    List<Envio> findBySucursalDestinoId(int id_sucursal);
+    List<Envio> findByClienteId(int id_cliente);
     List<Envio> findByEstado(String estado);
     Optional<Envio> findByNumeroSeguimiento(String numeroSeguimiento);
 }
