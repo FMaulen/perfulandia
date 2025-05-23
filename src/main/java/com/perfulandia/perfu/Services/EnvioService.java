@@ -66,7 +66,7 @@ public class EnvioService {
 
     // Obtener envío por ID
     public Envio obtenerEnvioPorId(int id) {
-        return envioRepository.findById((long) id)
+        return envioRepository.findById((int) id)
                 .orElseThrow(() -> new RuntimeException("Envío no encontrado"));
     }
 
@@ -92,14 +92,14 @@ public class EnvioService {
     public List<Envio> listarEnviosPorSucursalOrigen(int idSucursal) {
         sucursalRepository.findById(idSucursal)
                 .orElseThrow(() -> new RuntimeException("Sucursal no encontrada"));
-        return envioRepository.findBySucursalOrigenId(Long.valueOf(idSucursal));
+        return envioRepository.findBySucursalOrigen_IdSucursal(idSucursal);
     }
 
     // Listar envíos por sucursal destino
     public List<Envio> listarEnviosPorSucursalDestino(int idSucursal) {
         sucursalRepository.findById(idSucursal)
                 .orElseThrow(() -> new RuntimeException("Sucursal no encontrada"));
-        return envioRepository.findBySucursalDestinoId((long) idSucursal);
+        return envioRepository.findBySucursalDestino_IdSucursal(idSucursal);
     }
 
     // Listar envíos por estado
@@ -115,9 +115,9 @@ public class EnvioService {
 
     // Eliminar envío
     public void eliminarEnvio(int id) {
-        if (!envioRepository.existsById((long) id)) {
+        if (!envioRepository.existsById((int) id)) {
             throw new RuntimeException("Envío no encontrado");
         }
-        envioRepository.deleteById((long) id);
+        envioRepository.deleteById((int) id);
     }
 }
