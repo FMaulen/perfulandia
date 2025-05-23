@@ -1,16 +1,16 @@
 package com.perfulandia.perfu.Services;
 
 import com.perfulandia.perfu.Model.DetallePedido;
-import com.perfulandia.perfu.Repository.EmpleadoDeVentasRepository;
+import com.perfulandia.perfu.Repository.DetallePedidoRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmpleadoDeVentasServices {
 
-    private final EmpleadoDeVentasRepository empleadoDeVentasRepository;
+    private final DetallePedidoRepository detallePedidoRepository;
 
-    public EmpleadoDeVentasServices(EmpleadoDeVentasRepository empleadoDeVentasRepository) {
-        this.empleadoDeVentasRepository = empleadoDeVentasRepository;
+    public EmpleadoDeVentasServices(DetallePedidoRepository detallePedidoRepository) {
+        this.detallePedidoRepository = detallePedidoRepository;
     }
 
     public String registrarVenta(DetallePedido detallePedido) {
@@ -27,7 +27,7 @@ public class EmpleadoDeVentasServices {
         int total = subtotal - descuentoAplicado;
 
         // Guardar el detalle del pedido
-        empleadoDeVentasRepository.save(detallePedido);
+        detallePedidoRepository.save(detallePedido);
 
         // Generar mensaje de confirmación
         String mensaje = "Venta registrada exitosamente:\n" +
@@ -48,7 +48,7 @@ public class EmpleadoDeVentasServices {
     // Método adicional para obtener todas las ventas
     public String listarVentas() {
         StringBuilder output = new StringBuilder();
-        for (DetallePedido venta : empleadoDeVentasRepository.findAll()) {
+        for (DetallePedido venta : detallePedidoRepository.findAll()) { //
             output.append("ID Venta: ").append(venta.getId()).append("\n")
                     .append("ID Pedido: ").append(venta.getPedido().getId()).append("\n")
                     .append("Producto: ").append(venta.getProducto().getNombre()).append("\n")
@@ -66,7 +66,7 @@ public class EmpleadoDeVentasServices {
 
     // Método para obtener una venta por ID
     public String obtenerVentaPorID(int id) {
-        return empleadoDeVentasRepository.findById(id)
+        return detallePedidoRepository.findById(id) //
                 .map(venta -> {
                     String output = "ID Venta: " + venta.getId() + "\n";
                     output += "ID Pedido: " + venta.getPedido().getId() + "\n";
