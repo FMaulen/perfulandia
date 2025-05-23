@@ -1,5 +1,6 @@
 package com.perfulandia.perfu.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import lombok.Data;
@@ -19,26 +20,37 @@ public class Envio {
    private int id_envio;
 
    private String numero_seguimiento;
+
+   @Temporal(TemporalType.TIMESTAMP)
    private Date fecha_envio;
+
    private String estado; // PENDIENTE, EN_PROCESO, EN_TRANSITO, ENTREGADO
    private String direccion_entrega;
    private String notas;
 
-   @ManyToOne
+   @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "id_sucursal_origen")
+   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
    private Sucursal sucursalOrigen;
 
-   @ManyToOne
+   @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "id_sucursal_destino")
+   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
    private Sucursal sucursalDestino;
 
-   @ManyToOne
+   @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "id_cliente")
+   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
    private Cliente cliente;
 
-   @OneToMany
+   @ManyToMany(fetch = FetchType.LAZY)
+   @JoinTable(
+           name = "envio_producto",
+           joinColumns = @JoinColumn(name = "id_envio"),
+           inverseJoinColumns = @JoinColumn(name = "id_producto")
+   )
+   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
    private List<Producto> productos;
-
 
    // Relacion ManyToOne con Logistica
    // Envio es del lado propietario
