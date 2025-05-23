@@ -1,4 +1,7 @@
 package com.perfulandia.perfu.Repository;
 
-public interface GerenteSucursalRepository {
+import com.perfulandia.perfu.Model.GerenteSucursal;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface GerenteSucursalRepository extends JpaRepository<GerenteSucursal, Integer> {
 }

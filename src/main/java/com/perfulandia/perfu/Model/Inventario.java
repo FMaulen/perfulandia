@@ -17,8 +17,7 @@ public class Inventario {
     private int id;
     // id sucursal FK
     // id producto FK
-    private int cantidad;
-    private int stock_minimo;
+    private int stock;
 
     // Relacion OneToOne con Sucursal
     // Inventario es el lado propietario
