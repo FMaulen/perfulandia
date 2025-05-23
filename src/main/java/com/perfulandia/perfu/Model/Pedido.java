@@ -19,7 +19,7 @@ import java.util.HashSet;
 public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_pedido;
+    private Long id;
     // id_cliente
     private Date fecha_pedido;
     private String estado_pedido;

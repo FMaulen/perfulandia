@@ -17,8 +17,7 @@ import java.util.Set;
 public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    private int id_producto;
+    private Long id;
     private String nombre;
     private String descripcion;
     private String precio;
