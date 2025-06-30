@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,68 +22,48 @@ public class AdministradorSistemaService {
     @Autowired
     private PermisoRepository permisoRepository;
 
-    public String registrarAdmin(AdministradorSistema admin) {
+    public AdministradorSistema registrarAdmin(AdministradorSistema admin) {
         admin.setFecha_registro(new Date());
         admin.setActivo(true);
-        adminRepository.save(admin);
-        return "Administrador registrado correctamente";
+        return adminRepository.save(admin);
     }
 
-    public String listarAdmins() {
-        StringBuilder output = new StringBuilder();
-        adminRepository.findAll().forEach(admin -> {
-            output.append("ID: ").append(admin.getId_administrador_sistema()).append("\n")
-                    .append("Nombre: ").append(admin.getNombre()).append("\n")
-                    .append("Correo: ").append(admin.getCorreo()).append("\n")
-                    .append("Estado: ").append(admin.getActivo() ? "Activo" : "Inactivo").append("\n\n");
-        });
-        return output.length() > 0 ? output.toString() : "No hay administradores registrados";
+    public List<AdministradorSistema> listarAdmins() {
+        return adminRepository.findAll();
     }
 
-    public String buscarAdminPorId(int id) {
-        return adminRepository.findById(id)
-                .map(admin -> {
-                    String permisos = admin.getPermisos().stream()
-                            .map(Permiso::getNombre_permiso)
-                            .collect(Collectors.joining(", "));
-
-                    return "ID: " + admin.getId_administrador_sistema() + "\n" +
-                            "Nombre: " + admin.getNombre() + "\n" +
-                            "Correo: " + admin.getCorreo() + "\n" +
-                            "Permisos: " + (permisos.isEmpty() ? "Ninguno" : permisos);
-                })
-                .orElse("Administrador no encontrado");
+    public Optional<AdministradorSistema> buscarAdminPorId(int id) {
+        return adminRepository.findById(id);
     }
 
-    public String cambiarEstadoAdmin(int id, boolean activo) {
+    public Optional<AdministradorSistema> cambiarEstadoAdmin(int id, boolean activo) {
         return adminRepository.findById(id)
                 .map(admin -> {
                     admin.setActivo(activo);
-                    adminRepository.save(admin);
-                    return "Estado actualizado a: " + (activo ? "Activo" : "Inactivo");
-                })
-                .orElse("Administrador no encontrado");
+                    return adminRepository.save(admin);
+                });
     }
 
-    public String asignarPermisos(int adminId, List<Integer> permisosIds) {
+    public Optional<AdministradorSistema> asignarPermisos(int adminId, List<Integer> permisosIds) {
         return adminRepository.findById(adminId)
                 .map(admin -> {
                     Set<Permiso> permisos = permisoRepository.findAllById(permisosIds).stream()
                             .collect(Collectors.toSet());
                     admin.setPermisos(permisos);
-                    adminRepository.save(admin);
-                    return permisosIds.size() + " permisos asignados correctamente";
-                })
-                .orElse("Administrador no encontrado");
+                    return adminRepository.save(admin);
+                });
     }
 
-    public String quitarPermiso(int adminId, int permisoId) {
-        return adminRepository.findById(adminId)
-                .map(admin -> {
-                    admin.getPermisos().removeIf(p -> p.getId_permiso() == permisoId);
-                    adminRepository.save(admin);
-                    return "Permiso removido correctamente";
-                })
-                .orElse("Administrador no encontrado");
+
+    public Optional<AdministradorSistema> quitarPermiso(int adminId, int permisoId) {
+        Optional<AdministradorSistema> adminOpt = adminRepository.findById(adminId);
+        if (adminOpt.isPresent()) {
+            AdministradorSistema admin = adminOpt.get();
+            boolean removed = admin.getPermisos().removeIf(p -> p.getId_permiso() == permisoId);
+            if (removed) {
+                return Optional.of(adminRepository.save(admin));
+            }
+        }
+        return adminOpt;
     }
 }

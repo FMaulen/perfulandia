@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SucursalService {
@@ -13,49 +14,33 @@ public class SucursalService {
     @Autowired
     private SucursalRepository sucursalRepository;
 
-    public String registrarSucursal(Sucursal sucursal) {
-        sucursalRepository.save(sucursal);
-        return "Sucursal registrada correctamente";
+    public Sucursal registrarSucursal(Sucursal sucursal) {
+        return sucursalRepository.save(sucursal);
     }
 
-    public String listarSucursales() {
-        StringBuilder output = new StringBuilder();
-        for (Sucursal s : sucursalRepository.findAll()) {
-            output.append("ID: ").append(s.getId_sucursal()).append("\n")
-                    .append("Nombre: ").append(s.getNombre()).append("\n")
-                    .append("Dirección: ").append(s.getDireccion()).append("\n")
-                    .append("Teléfono: ").append(s.getTelefono()).append("\n\n");
-        }
-        return output.length() > 0 ? output.toString() : "No hay sucursales registradas";
+    public List<Sucursal> listarSucursales() {
+        return sucursalRepository.findAll();
     }
 
-    public String buscarSucursalPorId(int id) {
-        return sucursalRepository.findById(id)
-                .map(s -> "ID: " + s.getId_sucursal() + "\n" +
-                        "Nombre: " + s.getNombre() + "\n" +
-                        "Email: " + s.getCorreo() + "\n" +
-                        "Gerente: " + (s.getGerenteSucursal() != null ? s.getGerenteSucursal().getNombre() : "No asignado"))
-                .orElse("No existe sucursal con ese ID");
+    public Optional<Sucursal> buscarSucursalPorId(int id) {
+        return sucursalRepository.findById(id);
     }
 
-    public String eliminarSucursal(int id) {
-        if (sucursalRepository.existsById(id)) {
-            sucursalRepository.deleteById(id);
-            return "Sucursal eliminada correctamente";
-        }
-        return "No existe sucursal con ese ID";
+    public void eliminarSucursal(int id) {
+        sucursalRepository.deleteById(id);
     }
 
-    public String actualizarSucursal(int id, Sucursal sucursalActualizada) {
+    public Optional<Sucursal> actualizarSucursal(int id, Sucursal sucursalActualizada) {
         return sucursalRepository.findById(id)
                 .map(s -> {
                     s.setNombre(sucursalActualizada.getNombre());
                     s.setDireccion(sucursalActualizada.getDireccion());
                     s.setTelefono(sucursalActualizada.getTelefono());
                     s.setCorreo(sucursalActualizada.getCorreo());
-                    sucursalRepository.save(s);
-                    return "Sucursal actualizada correctamente";
-                })
-                .orElse("No existe sucursal con ese ID");
+                    if (sucursalActualizada.getAdministradorSistema() != null) {
+                        s.setAdministradorSistema(sucursalActualizada.getAdministradorSistema());
+                    }
+                    return sucursalRepository.save(s);
+                });
     }
 }

@@ -5,93 +5,56 @@ import com.perfulandia.perfu.Repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-// Se supone que aqui va la logica pero como le meto la logica
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ClienteServices {
 
-    // Nose que hace esto, no tocar
     @Autowired
     private ClienteRepository clienteRepository;
 
-    // para agregar
-    public String agregarCliente(Cliente cliente){
-        clienteRepository.save(cliente);
-        return "Cliente agregado correctamente";
+
+    public Cliente agregarCliente(Cliente cliente){
+        cliente.setFecha_registro(new Date());
+        return clienteRepository.save(cliente);
     }
 
-    //GetAll
-    public String listarClientes(){
-        String output = "";
-        for(Cliente cliente : clienteRepository.findAll()){
-            output += "ID Cliente: "+cliente.getId_cliente() + "\n";
-            output += "Nombre: "+cliente.getNombre() + "\n";
-            output += "Correo: "+cliente.getCorreo() + "\n";
-            output += "Telefono: "+cliente.getTelefono() + "\n";
-            output += "Fecha Registro: "+cliente.getFecha_registro() + "\n";
-            output += "Estado: "+ (cliente.getHabilitado() ? "Habilitado" : "Deshabilitado") + "\n";
-        }
 
-        if (output.isEmpty()){
-            return "No hay clientes";
-        }else{
-            return output;
-        }
+    public List<Cliente> listarClientes(){
+        return clienteRepository.findAll();
     }
 
-    //GetOnePerID
-    public String obtenerClientePorID(int id){
-        String output = "";
-        if(clienteRepository.existsById(id)){
-            Cliente cliente = clienteRepository.findById(id).get();
-            output += "ID Cliente: "+cliente.getId_cliente() + "\n";
-            output += "Nombre: "+cliente.getNombre() + "\n";
-            output += "Correo: "+cliente.getCorreo() + "\n";
-            output += "Telefono: "+cliente.getTelefono() + "\n";
-            output += "Fecha Registro: "+cliente.getFecha_registro() + "\n";
-            output += "Estado: "+ (cliente.getHabilitado() ? "Habilitado" : "Deshabilitado") + "\n";
-            return output;
-        }else{
-            return "No existe un cliente con ese ID";
-        }
+
+    public Optional<Cliente> obtenerClientePorID(int id){
+        return clienteRepository.findById(id);
     }
 
-    //Delete by ID
-    public String eliminarClientePorID(int id){
-        if(clienteRepository.existsById(id)){
-            clienteRepository.deleteById(id);
-            return "Cliente eliminado correctamente";
-        }else{
-            return "No existe un cliente con ese ID";
-        }
+    public void eliminarClientePorID(int id){
+        clienteRepository.deleteById(id);
     }
 
-    //Actualizar cliente
 
-    public String actualizarCliente(int id, Cliente cliente){
-        if(clienteRepository.existsById(id)){
-            Cliente buscado = clienteRepository.findById(id).get();
-            buscado.setNombre(cliente.getNombre());
-            buscado.setCorreo(cliente.getCorreo());
-            buscado.setTelefono(cliente.getTelefono());
-            buscado.setFecha_registro(cliente.getFecha_registro());
-            buscado.setDireccion(cliente.getDireccion());
-            buscado.setHabilitado(cliente.getHabilitado());
-            clienteRepository.save(buscado);
-            return "Cliente actualizado correctamente";
-        }else{
-            return "No existe un cliente con ese ID";
-        }
+    public Optional<Cliente> actualizarCliente(int id, Cliente clienteDetails){
+        return clienteRepository.findById(id)
+                .map(clienteExistente -> {
+                    clienteExistente.setNombre(clienteDetails.getNombre());
+                    clienteExistente.setCorreo(clienteDetails.getCorreo());
+                    clienteExistente.setTelefono(clienteDetails.getTelefono());
+                    clienteExistente.setDireccion(clienteDetails.getDireccion());
+                    clienteExistente.setHabilitado(clienteDetails.getHabilitado());
+
+                    return clienteRepository.save(clienteExistente);
+                });
     }
 
-    public String cambiarEstadoCliente(int id, boolean habilitado){
-        if (clienteRepository.existsById(id)){
-            Cliente cliente = clienteRepository.findById(id).get();
-            cliente.setHabilitado(habilitado);
-            clienteRepository.save(cliente);
-            return "Estado del cliente cambiado a: " + (habilitado ? "Habilitado" : "Deshabilitado");
-        } else {
-            return "No existe un cliente con ese ID";
-        }
+
+    public Optional<Cliente> cambiarEstadoCliente(int id, boolean habilitado){
+        return clienteRepository.findById(id)
+                .map(cliente -> {
+                    cliente.setHabilitado(habilitado);
+                    return clienteRepository.save(cliente);
+                });
     }
 }
-// Gracias profe por el open source, tengo que leerme la documentacion noma, me quede en pseint
