@@ -1,21 +1,17 @@
 package com.perfulandia.perfu.Model;
 
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 public class AdministradorSistema {
 
@@ -27,12 +23,10 @@ public class AdministradorSistema {
     private Date fecha_registro;
     private Boolean activo;
 
-    // Relacion OneToMany con Sucursal
     @OneToMany(mappedBy = "administradorSistema")
+    @JsonManagedReference("admin-sucursales")
     private Set<Sucursal> sucursales = new HashSet<>();
 
-    // Relacion ManyToMany con Permiso
-    // AdministradorSistema es el lado propietario
     @ManyToMany
     @JoinTable(
             name = "administrador_sistema_permiso",

@@ -1,18 +1,16 @@
 package com.perfulandia.perfu.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
 import java.util.HashSet;
 import java.util.Set;
-
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 public class Proveedor {
 
@@ -25,19 +23,15 @@ public class Proveedor {
     private String email;
     private String direccion;
 
-    // @ManyToMany a Logistica
-    // Este lado es el inverso, por lo que va a usar mappedBy
-    // mappedBy apunta al nombre del campo de la relacion en la entidad Logistica
-    @ManyToMany(mappedBy = "proveedores") // "proveedores" es el nombre del Set en la clase Logistica
+    @ManyToMany
+    @JoinTable(
+            name = "logistica_proveedor",
+            joinColumns = @JoinColumn(name = "id_proveedor"),
+            inverseJoinColumns = @JoinColumn(name = "id_logistica")
+    )
     private Set<Logistica> logisticas = new HashSet<>();
 
-/*    // @ManyToMany a Producto
-    @ManyToMany(mappedBy = "proveedores")
-    private Set<Producto> productos = new HashSet<>();
-*/
-
-    // Relacion OneToMany con Producto
-    // Proveedor es el lado inverso
     @OneToMany(mappedBy = "proveedor")
+    @JsonManagedReference("proveedor-productos")
     private Set<Producto> productosProveedor = new HashSet<>();
 }

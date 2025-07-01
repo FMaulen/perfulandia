@@ -1,16 +1,15 @@
 package com.perfulandia.perfu.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
 import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 public class EmpleadoDeVentas {
     @Id
@@ -20,13 +19,13 @@ public class EmpleadoDeVentas {
     private String correo;
     private Date fecha_contratacion;
 
-   // Relacion ManyToOne con Sucursal
-   // EmpleadoDeVentas es el lado propietario
     @ManyToOne
     @JoinColumn(name = "id_sucursal")
+    @JsonBackReference("sucursal-empleados")
     private Sucursal sucursal;
 
     @ManyToOne
     @JoinColumn(name = "id_sucursal_contrato")
+    @JsonBackReference("sucursal-contratos")
     private Sucursal sucursalContrato;
 }

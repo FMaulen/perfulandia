@@ -1,10 +1,10 @@
 package com.perfulandia.perfu.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +12,6 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 public class Cliente {
     @Id
@@ -25,13 +24,11 @@ public class Cliente {
     private Date fecha_registro;
     private Boolean habilitado;
 
-    // Relacion OneToMany con Pedido
-    // Cliente es el lado inverso
     @OneToMany(mappedBy = "cliente")
+    @JsonManagedReference("cliente-pedidos")
     private Set<Pedido> pedidos = new HashSet<>();
 
-    // Relacion OneToMany con Resena
-    // Cliente es el lado inverso
     @OneToMany(mappedBy = "cliente")
+    @JsonManagedReference("cliente-resenas")
     private Set<Resena> resenas = new HashSet<>();
 }

@@ -1,21 +1,19 @@
 package com.perfulandia.perfu.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 public class Sucursal {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_sucursal;
@@ -24,39 +22,28 @@ public class Sucursal {
     private String telefono;
     private String correo;
 
-    // Relacion OneToOne con GerenteSucursal
     @OneToOne(mappedBy = "sucursal", cascade = CascadeType.ALL)
+    @JsonManagedReference("sucursal-gerente")
     private GerenteSucursal gerenteSucursal;
 
-    // Relacion ManyToOne con AdministradorSistema
     @ManyToOne
     @JoinColumn(name = "id_administrador_sistema", unique = true)
+    @JsonBackReference("admin-sucursales")
     private AdministradorSistema administradorSistema;
 
-    // Relacion OneToMany con EmpleadoDeVentas
-    // Sucursal es el lado inverso
     @OneToMany(mappedBy = "sucursal")
-    private Set<EmpleadoDeVentas> empleadosDeVentas = new HashSet<>(); // Sucursal Trabajo (Los que trabajan aqui)
+    @JsonManagedReference("sucursal-empleados")
+    private Set<EmpleadoDeVentas> empleadosDeVentas = new HashSet<>();
 
     @OneToMany(mappedBy = "sucursalContrato")
-    private Set<EmpleadoDeVentas> contratadosVenta= new HashSet<>(); // Contratados Aqui
+    @JsonManagedReference("sucursal-contratos")
+    private Set<EmpleadoDeVentas> contratadosVenta= new HashSet<>();
 
-    // Relacion OneToMany con Pedido
-    // Sucursal es el lado inverso
     @OneToMany(mappedBy = "sucursal")
-    private Set<Pedido> pedidos = new HashSet<>(); // La sucursal puede manejar varios pedidos
+    @JsonManagedReference("sucursal-pedidos")
+    private Set<Pedido> pedidos = new HashSet<>();
 
-    // Relacion OneToMany con Inventario
-    // Sucursal es el lado inverso
     @OneToMany(mappedBy = "sucursal")
+    @JsonManagedReference("sucursal-inventario")
     private Set<Inventario> inventarios = new HashSet<>();
-
-
-
-    /* To Do
-    *   - Gestionar Usuarios
-    *   - Configurar Permisos
-    *   - Monitorizar sistemas
-    *   - Respaldar / Restaurar Datos
-    * */
 }
