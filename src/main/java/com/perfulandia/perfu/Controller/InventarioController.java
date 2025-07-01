@@ -50,8 +50,10 @@ public class InventarioController {
             @ApiResponse(responseCode = "200", description = "Item encontrado"),
             @ApiResponse(responseCode = "404", description = "Item no encontrado")
     })
-    @Parameter(description = "ID del item de inventario", required = true, example = "1")
-    public ResponseEntity<EntityModel<Inventario>> buscarItem(@PathVariable int id) {
+    public ResponseEntity<EntityModel<Inventario>> buscarItem(
+            @Parameter(description = "ID del item de inventario", required = true, example = "1")
+            @PathVariable int id
+    ) {
         return inventarioService.buscarItemPorID(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,10 @@ public class InventarioController {
             @ApiResponse(responseCode = "204", description = "Item eliminado"),
             @ApiResponse(responseCode = "404", description = "Item no encontrado")
     })
-    @Parameter(description = "ID del item a eliminar", required = true, example = "1")
-    public ResponseEntity<?> eliminarItem(@PathVariable int id) {
+    public ResponseEntity<?> eliminarItem(
+            @Parameter(description = "ID del item a eliminar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         if (inventarioService.buscarItemPorID(id).isPresent()) {
             inventarioService.eliminarItemPorID(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -92,8 +96,11 @@ public class InventarioController {
             @ApiResponse(responseCode = "200", description = "Item actualizado"),
             @ApiResponse(responseCode = "404", description = "Item no encontrado")
     })
-    @Parameter(description = "ID del item a actualizar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Inventario>> actualizarItem(@PathVariable int id, @RequestBody Inventario item) {
+    public ResponseEntity<EntityModel<Inventario>> actualizarItem(
+            @Parameter(description = "ID del item a actualizar", required = true, example = "1")
+            @PathVariable int id,
+            @RequestBody Inventario item
+    ) {
         return inventarioService.actualizarItem(id, item)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -106,9 +113,12 @@ public class InventarioController {
             @ApiResponse(responseCode = "200", description = "Stock actualizado"),
             @ApiResponse(responseCode = "404", description = "Item no encontrado")
     })
-    @Parameter(description = "ID del item", required = true, example = "1")
-    @Parameter(description = "La nueva cantidad en stock", required = true, example = "50")
-    public ResponseEntity<EntityModel<Inventario>> ajustarStock(@PathVariable int id, @RequestParam int stock) {
+    public ResponseEntity<EntityModel<Inventario>> ajustarStock(
+            @Parameter(description = "ID del item", required = true, example = "1")
+            @PathVariable int id,
+            @Parameter(description = "La nueva cantidad en stock", required = true, example = "50")
+            @RequestParam int stock
+    ) {
         return inventarioService.actualizarStock(id, stock)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)

@@ -63,14 +63,14 @@ public class AdministradorSistemaController {
             @ApiResponse(responseCode = "200", description = "Administrador encontrado"),
             @ApiResponse(responseCode = "404", description = "Administrador no encontrado")
     })
-    @Parameter(description = "ID del administrador a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<AdministradorSistema>> obtenerAdmin(@PathVariable int id) {
-        if (adminService.buscarAdminPorId(id).isPresent()) {
-            AdministradorSistema admin = adminService.buscarAdminPorId(id).get();
-            return new ResponseEntity<>(assembler.toModel(admin), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<EntityModel<AdministradorSistema>> obtenerAdmin(
+            @Parameter(description = "ID del administrador a buscar", required = true, example = "1")
+            @PathVariable int id
+    ) {
+        return adminService.buscarAdminPorId(id)
+                .map(assembler::toModel)
+                .map(ResponseEntity::ok)
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PatchMapping("/{id}/estado")
@@ -79,15 +79,16 @@ public class AdministradorSistemaController {
             @ApiResponse(responseCode = "200", description = "Estado del administrador actualizado"),
             @ApiResponse(responseCode = "404", description = "Administrador no encontrado")
     })
-    @Parameter(description = "ID del administrador a modificar", required = true, example = "1")
-    @Parameter(description = "Nuevo estado (true para activo, false para inactivo)", required = true, example = "false")
-    public ResponseEntity<EntityModel<AdministradorSistema>> cambiarEstado(@PathVariable int id, @RequestParam boolean activo) {
-        if (adminService.buscarAdminPorId(id).isPresent()) {
-            AdministradorSistema adminActualizado = adminService.cambiarEstadoAdmin(id, activo).get();
-            return new ResponseEntity<>(assembler.toModel(adminActualizado), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<EntityModel<AdministradorSistema>> cambiarEstado(
+            @Parameter(description = "ID del administrador a modificar", required = true, example = "1")
+            @PathVariable int id,
+            @Parameter(description = "Nuevo estado (true para activo, false para inactivo)", required = true, example = "false")
+            @RequestParam boolean activo
+    ) {
+        return adminService.cambiarEstadoAdmin(id, activo)
+                .map(assembler::toModel)
+                .map(ResponseEntity::ok)
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/{id}/permisos")
@@ -96,14 +97,15 @@ public class AdministradorSistemaController {
             @ApiResponse(responseCode = "200", description = "Permisos asignados correctamente"),
             @ApiResponse(responseCode = "404", description = "Administrador no encontrado")
     })
-    @Parameter(description = "ID del administrador", required = true, example = "1")
-    public ResponseEntity<EntityModel<AdministradorSistema>> asignarPermisos(@PathVariable int id, @RequestBody List<Integer> permisosIds) {
-        if (adminService.buscarAdminPorId(id).isPresent()) {
-            AdministradorSistema adminConPermisos = adminService.asignarPermisos(id, permisosIds).get();
-            return new ResponseEntity<>(assembler.toModel(adminConPermisos), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<EntityModel<AdministradorSistema>> asignarPermisos(
+            @Parameter(description = "ID del administrador", required = true, example = "1")
+            @PathVariable int id,
+            @RequestBody List<Integer> permisosIds
+    ) {
+        return adminService.asignarPermisos(id, permisosIds)
+                .map(assembler::toModel)
+                .map(ResponseEntity::ok)
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{adminId}/permisos/{permisoId}")
@@ -112,14 +114,15 @@ public class AdministradorSistemaController {
             @ApiResponse(responseCode = "200", description = "Permiso quitado correctamente"),
             @ApiResponse(responseCode = "404", description = "Administrador o permiso no encontrado para esa combinación")
     })
-    @Parameter(description = "ID del administrador", required = true, example = "1")
-    @Parameter(description = "ID del permiso a quitar", required = true, example = "3")
-    public ResponseEntity<EntityModel<AdministradorSistema>> quitarPermiso(@PathVariable int adminId, @PathVariable int permisoId) {
-        if (adminService.buscarAdminPorId(adminId).isPresent()) {
-            AdministradorSistema adminActualizado = adminService.quitarPermiso(adminId, permisoId).get();
-            return new ResponseEntity<>(assembler.toModel(adminActualizado), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<EntityModel<AdministradorSistema>> quitarPermiso(
+            @Parameter(description = "ID del administrador", required = true, example = "1")
+            @PathVariable int adminId,
+            @Parameter(description = "ID del permiso a quitar", required = true, example = "3")
+            @PathVariable int permisoId
+    ) {
+        return adminService.quitarPermiso(adminId, permisoId)
+                .map(assembler::toModel)
+                .map(ResponseEntity::ok)
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

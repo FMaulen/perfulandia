@@ -50,8 +50,10 @@ public class PedidoController {
             @ApiResponse(responseCode = "200", description = "Pedido encontrado"),
             @ApiResponse(responseCode = "404", description = "Pedido no encontrado")
     })
-    @Parameter(description = "ID del pedido a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Pedido>> obtenerPedido(@PathVariable int id) {
+    public ResponseEntity<EntityModel<Pedido>> obtenerPedido(
+            @Parameter(description = "ID del pedido a buscar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         return pedidoService.buscarPedidoPorId(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,11 @@ public class PedidoController {
             @ApiResponse(responseCode = "200", description = "Pedido actualizado"),
             @ApiResponse(responseCode = "404", description = "Pedido no encontrado")
     })
-    @Parameter(description = "ID del pedido a actualizar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Pedido>> actualizarPedido(@PathVariable int id, @RequestBody Pedido pedido) {
+    public ResponseEntity<EntityModel<Pedido>> actualizarPedido(
+            @Parameter(description = "ID del pedido a actualizar", required = true, example = "1")
+            @PathVariable int id,
+            @RequestBody Pedido pedido
+    ) {
         return pedidoService.actualizarPedido(id, pedido)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -90,8 +95,10 @@ public class PedidoController {
             @ApiResponse(responseCode = "204", description = "Pedido eliminado"),
             @ApiResponse(responseCode = "404", description = "Pedido no encontrado")
     })
-    @Parameter(description = "ID del pedido a eliminar", required = true, example = "1")
-    public ResponseEntity<?> eliminarPedido(@PathVariable int id) {
+    public ResponseEntity<?> eliminarPedido(
+            @Parameter(description = "ID del pedido a eliminar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         if (pedidoService.buscarPedidoPorId(id).isPresent()) {
             pedidoService.eliminarPedido(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

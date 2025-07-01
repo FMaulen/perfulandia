@@ -50,8 +50,10 @@ public class EmpleadoDeVentasController {
             @ApiResponse(responseCode = "200", description = "Empleado encontrado"),
             @ApiResponse(responseCode = "404", description = "Empleado no encontrado")
     })
-    @Parameter(description = "ID del empleado a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<EmpleadoDeVentas>> obtenerEmpleado(@PathVariable int id) {
+    public ResponseEntity<EntityModel<EmpleadoDeVentas>> obtenerEmpleado(
+            @Parameter(description = "ID del empleado a buscar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         return empleadoService.buscarEmpleadoPorId(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,11 @@ public class EmpleadoDeVentasController {
             @ApiResponse(responseCode = "200", description = "Empleado actualizado"),
             @ApiResponse(responseCode = "404", description = "Empleado no encontrado")
     })
-    @Parameter(description = "ID del empleado a actualizar", required = true, example = "1")
-    public ResponseEntity<EntityModel<EmpleadoDeVentas>> actualizarEmpleado(@PathVariable int id, @RequestBody EmpleadoDeVentas empleado) {
+    public ResponseEntity<EntityModel<EmpleadoDeVentas>> actualizarEmpleado(
+            @Parameter(description = "ID del empleado a actualizar", required = true, example = "1")
+            @PathVariable int id,
+            @RequestBody EmpleadoDeVentas empleado
+    ) {
         return empleadoService.actualizarEmpleado(id, empleado)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -90,8 +95,10 @@ public class EmpleadoDeVentasController {
             @ApiResponse(responseCode = "204", description = "Empleado eliminado"),
             @ApiResponse(responseCode = "404", description = "Empleado no encontrado")
     })
-    @Parameter(description = "ID del empleado a eliminar", required = true, example = "1")
-    public ResponseEntity<?> eliminarEmpleado(@PathVariable int id) {
+    public ResponseEntity<?> eliminarEmpleado(
+            @Parameter(description = "ID del empleado a eliminar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         if (empleadoService.buscarEmpleadoPorId(id).isPresent()) {
             empleadoService.eliminarEmpleado(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

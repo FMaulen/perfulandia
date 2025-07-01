@@ -50,8 +50,10 @@ public class ProveedorController {
             @ApiResponse(responseCode = "200", description = "Proveedor encontrado"),
             @ApiResponse(responseCode = "404", description = "Proveedor no encontrado")
     })
-    @Parameter(description = "ID del proveedor a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Proveedor>> obtenerProveedor(@PathVariable int id) {
+    public ResponseEntity<EntityModel<Proveedor>> obtenerProveedor(
+            @Parameter(description = "ID del proveedor a buscar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         return proveedorService.buscarProveedorPorId(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,11 @@ public class ProveedorController {
             @ApiResponse(responseCode = "200", description = "Proveedor actualizado"),
             @ApiResponse(responseCode = "404", description = "Proveedor no encontrado")
     })
-    @Parameter(description = "ID del proveedor a actualizar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Proveedor>> actualizarProveedor(@PathVariable int id, @RequestBody Proveedor proveedor) {
+    public ResponseEntity<EntityModel<Proveedor>> actualizarProveedor(
+            @Parameter(description = "ID del proveedor a actualizar", required = true, example = "1")
+            @PathVariable int id,
+            @RequestBody Proveedor proveedor
+    ) {
         return proveedorService.actualizarProveedor(id, proveedor)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -90,8 +95,10 @@ public class ProveedorController {
             @ApiResponse(responseCode = "204", description = "Proveedor eliminado"),
             @ApiResponse(responseCode = "404", description = "Proveedor no encontrado")
     })
-    @Parameter(description = "ID del proveedor a eliminar", required = true, example = "1")
-    public ResponseEntity<?> eliminarProveedor(@PathVariable int id) {
+    public ResponseEntity<?> eliminarProveedor(
+            @Parameter(description = "ID del proveedor a eliminar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         if (proveedorService.buscarProveedorPorId(id).isPresent()) {
             proveedorService.eliminarProveedor(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

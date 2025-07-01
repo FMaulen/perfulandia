@@ -50,8 +50,10 @@ public class EnvioController {
             @ApiResponse(responseCode = "200", description = "Envío encontrado"),
             @ApiResponse(responseCode = "404", description = "Envío no encontrado")
     })
-    @Parameter(description = "ID del envío a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Envio>> obtenerEnvio(@PathVariable int id) {
+    public ResponseEntity<EntityModel<Envio>> obtenerEnvio(
+            @Parameter(description = "ID del envío a buscar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         return envioService.buscarEnvioPorId(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,11 @@ public class EnvioController {
             @ApiResponse(responseCode = "200", description = "Envío actualizado"),
             @ApiResponse(responseCode = "404", description = "Envío no encontrado")
     })
-    @Parameter(description = "ID del envío a actualizar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Envio>> actualizarEnvio(@PathVariable int id, @RequestBody Envio envio) {
+    public ResponseEntity<EntityModel<Envio>> actualizarEnvio(
+            @Parameter(description = "ID del envío a actualizar", required = true, example = "1")
+            @PathVariable int id,
+            @RequestBody Envio envio
+    ) {
         return envioService.actualizarEnvio(id, envio)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -90,8 +95,10 @@ public class EnvioController {
             @ApiResponse(responseCode = "204", description = "Envío eliminado"),
             @ApiResponse(responseCode = "404", description = "Envío no encontrado")
     })
-    @Parameter(description = "ID del envío a eliminar", required = true, example = "1")
-    public ResponseEntity<?> eliminarEnvio(@PathVariable int id) {
+    public ResponseEntity<?> eliminarEnvio(
+            @Parameter(description = "ID del envío a eliminar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         if (envioService.buscarEnvioPorId(id).isPresent()) {
             envioService.eliminarEnvio(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

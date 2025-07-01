@@ -62,8 +62,10 @@ public class ClienteController {
             @ApiResponse(responseCode = "200", description = "Cliente encontrado"),
             @ApiResponse(responseCode = "404", description = "Cliente no encontrado con ese ID")
     })
-    @Parameter(description = "ID del cliente a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Cliente>> getClientePorID(@PathVariable int id){
+    public ResponseEntity<EntityModel<Cliente>> getClientePorID(
+            @Parameter(description = "ID del cliente a buscar", required = true, example = "1")
+            @PathVariable int id
+    ){
         return clienteServices.obtenerClientePorID(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,10 @@ public class ClienteController {
             @ApiResponse(responseCode = "204", description = "Cliente eliminado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
     })
-    @Parameter(description = "ID del cliente a eliminar", required = true, example = "1")
-    public ResponseEntity<?> deleteClientePorID(@PathVariable int id){
+    public ResponseEntity<?> deleteClientePorID(
+            @Parameter(description = "ID del cliente a eliminar", required = true, example = "1")
+            @PathVariable int id
+    ){
         if (clienteServices.obtenerClientePorID(id).isPresent()) {
             clienteServices.eliminarClientePorID(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -92,8 +96,11 @@ public class ClienteController {
             @ApiResponse(responseCode = "200", description = "Cliente actualizado"),
             @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
     })
-    @Parameter(description = "ID del cliente a actualizar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Cliente>> updateClientePorID(@PathVariable int id, @RequestBody Cliente cliente){
+    public ResponseEntity<EntityModel<Cliente>> updateClientePorID(
+            @Parameter(description = "ID del cliente a actualizar", required = true, example = "1")
+            @PathVariable int id,
+            @RequestBody Cliente cliente
+    ){
         return clienteServices.actualizarCliente(id, cliente)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -106,9 +113,12 @@ public class ClienteController {
             @ApiResponse(responseCode = "200", description = "Estado del cliente actualizado"),
             @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
     })
-    @Parameter(description = "ID del cliente", required = true, example = "1")
-    @Parameter(description = "Nuevo estado (true para habilitado, false para deshabilitado)", required = true, example = "false")
-    public ResponseEntity<EntityModel<Cliente>> cambiarEstadoCliente(@PathVariable int id, @RequestParam boolean habilitado){
+    public ResponseEntity<EntityModel<Cliente>> cambiarEstadoCliente(
+            @Parameter(description = "ID del cliente", required = true, example = "1")
+            @PathVariable int id,
+            @Parameter(description = "Nuevo estado (true para habilitado, false para deshabilitado)", required = true, example = "false")
+            @RequestParam boolean habilitado
+    ){
         return clienteServices.cambiarEstadoCliente(id, habilitado)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)

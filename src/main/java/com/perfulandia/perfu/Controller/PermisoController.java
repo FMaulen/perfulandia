@@ -50,8 +50,10 @@ public class PermisoController {
             @ApiResponse(responseCode = "200", description = "Permiso encontrado"),
             @ApiResponse(responseCode = "404", description = "Permiso no encontrado")
     })
-    @Parameter(description = "ID del permiso a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Permiso>> getPermisoById(@PathVariable int id) {
+    public ResponseEntity<EntityModel<Permiso>> getPermisoById(
+            @Parameter(description = "ID del permiso a buscar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         return permisoService.buscarPorId(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,10 @@ public class PermisoController {
             @ApiResponse(responseCode = "204", description = "Permiso eliminado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Permiso no encontrado")
     })
-    @Parameter(description = "ID del permiso a eliminar", required = true, example = "1")
-    public ResponseEntity<?> eliminarPermiso(@PathVariable int id) {
+    public ResponseEntity<?> eliminarPermiso(
+            @Parameter(description = "ID del permiso a eliminar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         if (permisoService.buscarPorId(id).isPresent()) {
             permisoService.eliminarPermiso(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

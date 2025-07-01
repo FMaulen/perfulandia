@@ -50,8 +50,10 @@ public class GerenteSucursalController {
             @ApiResponse(responseCode = "200", description = "Gerente encontrado"),
             @ApiResponse(responseCode = "404", description = "Gerente no encontrado con ese ID")
     })
-    @Parameter(description = "ID del gerente a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<GerenteSucursal>> getGerentePorId(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<GerenteSucursal>> getGerentePorId(
+            @Parameter(description = "ID del gerente a buscar", required = true, example = "1")
+            @PathVariable Long id
+    ) {
         return gerenteService.obtenerGerentePorId(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,11 @@ public class GerenteSucursalController {
             @ApiResponse(responseCode = "200", description = "Gerente actualizado"),
             @ApiResponse(responseCode = "404", description = "Gerente no encontrado")
     })
-    @Parameter(description = "ID del gerente a actualizar", required = true, example = "1")
-    public ResponseEntity<EntityModel<GerenteSucursal>> updateGerente(@PathVariable Long id, @RequestBody GerenteSucursal gerente) {
+    public ResponseEntity<EntityModel<GerenteSucursal>> updateGerente(
+            @Parameter(description = "ID del gerente a actualizar", required = true, example = "1")
+            @PathVariable Long id,
+            @RequestBody GerenteSucursal gerente
+    ) {
         return gerenteService.actualizarGerente(id, gerente)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -90,8 +95,10 @@ public class GerenteSucursalController {
             @ApiResponse(responseCode = "204", description = "Gerente eliminado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Gerente no encontrado")
     })
-    @Parameter(description = "ID del gerente a eliminar", required = true, example = "1")
-    public ResponseEntity<?> deleteGerente(@PathVariable Long id) {
+    public ResponseEntity<?> deleteGerente(
+            @Parameter(description = "ID del gerente a eliminar", required = true, example = "1")
+            @PathVariable Long id
+    ) {
         if (gerenteService.obtenerGerentePorId(id).isPresent()) {
             gerenteService.eliminarGerentePorId(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

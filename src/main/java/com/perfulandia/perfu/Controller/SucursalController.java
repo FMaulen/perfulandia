@@ -50,8 +50,10 @@ public class SucursalController {
             @ApiResponse(responseCode = "200", description = "Sucursal encontrada"),
             @ApiResponse(responseCode = "404", description = "Sucursal no encontrada")
     })
-    @Parameter(description = "ID de la sucursal a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Sucursal>> obtenerSucursal(@PathVariable int id) {
+    public ResponseEntity<EntityModel<Sucursal>> obtenerSucursal(
+            @Parameter(description = "ID de la sucursal a buscar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         return sucursalService.buscarSucursalPorId(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,11 @@ public class SucursalController {
             @ApiResponse(responseCode = "200", description = "Sucursal actualizada"),
             @ApiResponse(responseCode = "404", description = "Sucursal no encontrada")
     })
-    @Parameter(description = "ID de la sucursal a actualizar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Sucursal>> actualizarSucursal(@PathVariable int id, @RequestBody Sucursal sucursal) {
+    public ResponseEntity<EntityModel<Sucursal>> actualizarSucursal(
+            @Parameter(description = "ID de la sucursal a actualizar", required = true, example = "1")
+            @PathVariable int id,
+            @RequestBody Sucursal sucursal
+    ) {
         return sucursalService.actualizarSucursal(id, sucursal)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -90,8 +95,10 @@ public class SucursalController {
             @ApiResponse(responseCode = "204", description = "Sucursal eliminada"),
             @ApiResponse(responseCode = "404", description = "Sucursal no encontrada")
     })
-    @Parameter(description = "ID de la sucursal a eliminar", required = true, example = "1")
-    public ResponseEntity<?> eliminarSucursal(@PathVariable int id) {
+    public ResponseEntity<?> eliminarSucursal(
+            @Parameter(description = "ID de la sucursal a eliminar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         if (sucursalService.buscarSucursalPorId(id).isPresent()) {
             sucursalService.eliminarSucursal(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

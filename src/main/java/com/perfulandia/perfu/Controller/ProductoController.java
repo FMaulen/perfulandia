@@ -50,8 +50,10 @@ public class ProductoController {
             @ApiResponse(responseCode = "200", description = "Producto encontrado"),
             @ApiResponse(responseCode = "404", description = "Producto no encontrado")
     })
-    @Parameter(description = "ID del producto a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Producto>> buscar(@PathVariable int id) {
+    public ResponseEntity<EntityModel<Producto>> buscar(
+            @Parameter(description = "ID del producto a buscar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         return productoService.buscarProducto(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,11 @@ public class ProductoController {
             @ApiResponse(responseCode = "200", description = "Producto actualizado"),
             @ApiResponse(responseCode = "404", description = "Producto no encontrado")
     })
-    @Parameter(description = "ID del producto a actualizar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Producto>> actualizar(@PathVariable int id, @RequestBody Producto producto) {
+    public ResponseEntity<EntityModel<Producto>> actualizar(
+            @Parameter(description = "ID del producto a actualizar", required = true, example = "1")
+            @PathVariable int id,
+            @RequestBody Producto producto
+    ) {
         return productoService.actualizarProducto(id, producto)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -90,8 +95,10 @@ public class ProductoController {
             @ApiResponse(responseCode = "204", description = "Producto eliminado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Producto no encontrado")
     })
-    @Parameter(description = "ID del producto a eliminar", required = true, example = "1")
-    public ResponseEntity<?> eliminar(@PathVariable int id) {
+    public ResponseEntity<?> eliminar(
+            @Parameter(description = "ID del producto a eliminar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         if (productoService.buscarProducto(id).isPresent()) {
             productoService.eliminarProducto(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

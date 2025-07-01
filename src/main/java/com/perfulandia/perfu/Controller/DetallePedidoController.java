@@ -50,8 +50,10 @@ public class DetallePedidoController {
             @ApiResponse(responseCode = "200", description = "Detalle encontrado"),
             @ApiResponse(responseCode = "404", description = "Detalle no encontrado")
     })
-    @Parameter(description = "ID del detalle de pedido a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<DetallePedido>> obtenerDetalle(@PathVariable int id) {
+    public ResponseEntity<EntityModel<DetallePedido>> obtenerDetalle(
+            @Parameter(description = "ID del detalle de pedido a buscar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         return detalleService.buscarDetallePorId(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,11 @@ public class DetallePedidoController {
             @ApiResponse(responseCode = "200", description = "Detalle actualizado"),
             @ApiResponse(responseCode = "404", description = "Detalle no encontrado")
     })
-    @Parameter(description = "ID del detalle a actualizar", required = true, example = "1")
-    public ResponseEntity<EntityModel<DetallePedido>> actualizarDetalle(@PathVariable int id, @RequestBody DetallePedido detalle) {
+    public ResponseEntity<EntityModel<DetallePedido>> actualizarDetalle(
+            @Parameter(description = "ID del detalle a actualizar", required = true, example = "1")
+            @PathVariable int id,
+            @RequestBody DetallePedido detalle
+    ) {
         return detalleService.actualizarDetalle(id, detalle)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -90,8 +95,10 @@ public class DetallePedidoController {
             @ApiResponse(responseCode = "204", description = "Detalle eliminado"),
             @ApiResponse(responseCode = "404", description = "Detalle no encontrado")
     })
-    @Parameter(description = "ID del detalle a eliminar", required = true, example = "1")
-    public ResponseEntity<?> eliminarDetalle(@PathVariable int id) {
+    public ResponseEntity<?> eliminarDetalle(
+            @Parameter(description = "ID del detalle a eliminar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         if (detalleService.buscarDetallePorId(id).isPresent()) {
             detalleService.eliminarDetalle(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

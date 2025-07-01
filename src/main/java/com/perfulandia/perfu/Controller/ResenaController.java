@@ -50,8 +50,10 @@ public class ResenaController {
             @ApiResponse(responseCode = "200", description = "Reseña encontrada"),
             @ApiResponse(responseCode = "404", description = "Reseña no encontrada")
     })
-    @Parameter(description = "ID de la reseña a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Resena>> obtenerResena(@PathVariable int id) {
+    public ResponseEntity<EntityModel<Resena>> obtenerResena(
+            @Parameter(description = "ID de la reseña a buscar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         return resenaService.buscarResenaPorId(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,11 @@ public class ResenaController {
             @ApiResponse(responseCode = "200", description = "Reseña actualizada"),
             @ApiResponse(responseCode = "404", description = "Reseña no encontrada")
     })
-    @Parameter(description = "ID de la reseña a actualizar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Resena>> actualizarResena(@PathVariable int id, @RequestBody Resena resena) {
+    public ResponseEntity<EntityModel<Resena>> actualizarResena(
+            @Parameter(description = "ID de la reseña a actualizar", required = true, example = "1")
+            @PathVariable int id,
+            @RequestBody Resena resena
+    ) {
         return resenaService.actualizarResena(id, resena)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -90,8 +95,10 @@ public class ResenaController {
             @ApiResponse(responseCode = "204", description = "Reseña eliminada"),
             @ApiResponse(responseCode = "404", description = "Reseña no encontrada")
     })
-    @Parameter(description = "ID de la reseña a eliminar", required = true, example = "1")
-    public ResponseEntity<?> eliminarResena(@PathVariable int id) {
+    public ResponseEntity<?> eliminarResena(
+            @Parameter(description = "ID de la reseña a eliminar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         if (resenaService.buscarResenaPorId(id).isPresent()) {
             resenaService.eliminarResena(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

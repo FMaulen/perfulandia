@@ -50,8 +50,10 @@ public class LogisticaController {
             @ApiResponse(responseCode = "200", description = "Empresa encontrada"),
             @ApiResponse(responseCode = "404", description = "Empresa no encontrada")
     })
-    @Parameter(description = "ID de la empresa de logística a buscar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Logistica>> obtenerLogistica(@PathVariable int id) {
+    public ResponseEntity<EntityModel<Logistica>> obtenerLogistica(
+            @Parameter(description = "ID de la empresa de logística a buscar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         return logisticaService.buscarLogisticaPorId(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -76,8 +78,11 @@ public class LogisticaController {
             @ApiResponse(responseCode = "200", description = "Empresa actualizada"),
             @ApiResponse(responseCode = "404", description = "Empresa no encontrada")
     })
-    @Parameter(description = "ID de la empresa a actualizar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Logistica>> actualizarLogistica(@PathVariable int id, @RequestBody Logistica logistica) {
+    public ResponseEntity<EntityModel<Logistica>> actualizarLogistica(
+            @Parameter(description = "ID de la empresa a actualizar", required = true, example = "1")
+            @PathVariable int id,
+            @RequestBody Logistica logistica
+    ) {
         return logisticaService.actualizarLogistica(id, logistica)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -90,9 +95,12 @@ public class LogisticaController {
             @ApiResponse(responseCode = "200", description = "Proveedor asignado"),
             @ApiResponse(responseCode = "404", description = "Logística o proveedor no encontrado")
     })
-    @Parameter(description = "ID de la empresa de logística", required = true, example = "1")
-    @Parameter(description = "ID del proveedor a asignar", required = true, example = "1")
-    public ResponseEntity<EntityModel<Logistica>> asignarProveedor(@PathVariable int logisticaId, @PathVariable int proveedorId) {
+    public ResponseEntity<EntityModel<Logistica>> asignarProveedor(
+            @Parameter(description = "ID de la empresa de logística", required = true, example = "1")
+            @PathVariable int logisticaId,
+            @Parameter(description = "ID del proveedor a asignar", required = true, example = "1")
+            @PathVariable int proveedorId
+    ) {
         return logisticaService.asignarProveedor(logisticaId, proveedorId)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
@@ -105,8 +113,10 @@ public class LogisticaController {
             @ApiResponse(responseCode = "204", description = "Empresa eliminada"),
             @ApiResponse(responseCode = "404", description = "Empresa no encontrada")
     })
-    @Parameter(description = "ID de la empresa a eliminar", required = true, example = "1")
-    public ResponseEntity<?> eliminarLogistica(@PathVariable int id) {
+    public ResponseEntity<?> eliminarLogistica(
+            @Parameter(description = "ID de la empresa a eliminar", required = true, example = "1")
+            @PathVariable int id
+    ) {
         if (logisticaService.buscarLogisticaPorId(id).isPresent()) {
             logisticaService.eliminarLogistica(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
