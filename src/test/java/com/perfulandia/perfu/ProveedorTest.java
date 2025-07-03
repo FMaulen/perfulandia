@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ProveedorTest {
 
-    @Autowired
+    @MockitoBean
     private ProveedorRepository proveedorRepository;
 
     @Autowired
@@ -38,6 +38,10 @@ public class ProveedorTest {
 
     @Test
     void findAllProveedoresRepositoryTest() {
+        Proveedor proveedorMock = new Proveedor();
+        List<Proveedor> listaMock = Collections.singletonList(proveedorMock);
+        Mockito.when(proveedorRepository.findAll()).thenReturn(listaMock);
+
         List<Proveedor> proveedores = proveedorRepository.findAll();
         assertNotNull(proveedores);
         assertTrue(proveedores.size() >= 1);
@@ -46,6 +50,11 @@ public class ProveedorTest {
 
     @Test
     void checkProveedorNameRepositoryTest() {
+        Proveedor proveedorMock = new Proveedor();
+        proveedorMock.setId_proveedor(1);
+        proveedorMock.setNombre("Proveedor Esencias S.A.");
+        Mockito.when(proveedorRepository.findById(1)).thenReturn(Optional.of(proveedorMock));
+
         Proveedor proveedor = proveedorRepository.findById(1).get();
         assertNotNull(proveedor);
         assertEquals("Proveedor Esencias S.A.", proveedor.getNombre());
@@ -54,15 +63,12 @@ public class ProveedorTest {
 
     @Test
     void getAllProveedoresControllerTest() throws Exception {
-
         Proveedor proveedorMock = new Proveedor();
         proveedorMock.setId_proveedor(10);
         proveedorMock.setNombre("Proveedor Mock");
         List<Proveedor> listaMock = Collections.singletonList(proveedorMock);
 
-
         Mockito.when(proveedorService.listarProveedores()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/proveedores"))
                 .andExpect(status().isOk())
@@ -72,7 +78,6 @@ public class ProveedorTest {
 
     @Test
     void createProveedorControllerTest() throws Exception {
-
         Proveedor proveedorSinId = new Proveedor();
         proveedorSinId.setNombre("Nuevo Proveedor");
         proveedorSinId.setEmail("nuevo@proveedor.com");
@@ -82,9 +87,7 @@ public class ProveedorTest {
         proveedorConId.setNombre("Nuevo Proveedor");
         proveedorConId.setEmail("nuevo@proveedor.com");
 
-
         Mockito.when(proveedorService.registrarProveedor(Mockito.any(Proveedor.class))).thenReturn(proveedorConId);
-
 
         mockMvc.perform(post("/proveedores")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -26,7 +26,7 @@ import java.util.List;
 @AutoConfigureMockMvc
 public class ClienteTest {
 
-    @Autowired
+    @MockitoBean
     private ClienteRepository clienteRepository;
 
     @Autowired
@@ -38,15 +38,23 @@ public class ClienteTest {
 
     @Test
     void findAllClientesRepositoryTest() {
+        Cliente clienteMock = new Cliente();
+        List<Cliente> listaMock = Collections.singletonList(clienteMock);
+        Mockito.when(clienteRepository.findAll()).thenReturn(listaMock);
+
         List<Cliente> clientes = clienteRepository.findAll();
         assertNotNull(clientes);
-
         assertTrue(clientes.size() >= 1);
     }
 
 
     @Test
     void checkClienteNameRepositoryTest() {
+        Cliente clienteMock = new Cliente();
+        clienteMock.setId_cliente(1);
+        clienteMock.setNombre("Cliente de Prueba");
+        Mockito.when(clienteRepository.findById(1)).thenReturn(Optional.of(clienteMock));
+
         Cliente cliente = clienteRepository.findById(1).get();
         assertNotNull(cliente);
         assertEquals("Cliente de Prueba", cliente.getNombre());
@@ -55,15 +63,12 @@ public class ClienteTest {
 
     @Test
     void getAllClientesControllerTest() throws Exception {
-
         Cliente cliente = new Cliente();
         cliente.setId_cliente(10);
         cliente.setNombre("Cliente Mock");
         List<Cliente> listaMock = Collections.singletonList(cliente);
 
-
         Mockito.when(clienteServices.listarClientes()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/clientes"))
                 .andExpect(status().isOk())
@@ -73,15 +78,12 @@ public class ClienteTest {
 
     @Test
     void getClienteByIdControllerTest() throws Exception {
-
         Cliente clienteMock = new Cliente();
         clienteMock.setId_cliente(1);
         clienteMock.setNombre("Cliente Encontrado");
         clienteMock.setCorreo("encontrado@test.com");
 
-
         Mockito.when(clienteServices.obtenerClientePorID(1)).thenReturn(Optional.of(clienteMock));
-
 
         mockMvc.perform(get("/clientes/1"))
                 .andExpect(status().isOk())

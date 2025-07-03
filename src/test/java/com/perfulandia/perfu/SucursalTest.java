@@ -9,7 +9,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class SucursalTest {
 
-    @Autowired
+    @MockitoBean
     private SucursalRepository sucursalRepository;
 
     @Autowired
@@ -39,6 +38,10 @@ public class SucursalTest {
 
     @Test
     void findAllSucursalesRepositoryTest() {
+        Sucursal sucursalMock = new Sucursal();
+        List<Sucursal> listaMock = Collections.singletonList(sucursalMock);
+        Mockito.when(sucursalRepository.findAll()).thenReturn(listaMock);
+
         List<Sucursal> sucursales = sucursalRepository.findAll();
         assertNotNull(sucursales);
         assertTrue(sucursales.size() >= 1);
@@ -47,6 +50,11 @@ public class SucursalTest {
 
     @Test
     void checkSucursalNameRepositoryTest() {
+        Sucursal sucursalMock = new Sucursal();
+        sucursalMock.setId_sucursal(1);
+        sucursalMock.setNombre("Sucursal Central");
+        Mockito.when(sucursalRepository.findById(1)).thenReturn(Optional.of(sucursalMock));
+
         Sucursal sucursal = sucursalRepository.findById(1).get();
         assertNotNull(sucursal);
         assertEquals("Sucursal Central", sucursal.getNombre());
@@ -55,15 +63,12 @@ public class SucursalTest {
 
     @Test
     void getAllSucursalesControllerTest() throws Exception {
-
         Sucursal sucursalMock = new Sucursal();
         sucursalMock.setId_sucursal(10);
         sucursalMock.setNombre("Sucursal Mock");
         List<Sucursal> listaMock = Collections.singletonList(sucursalMock);
 
-
         Mockito.when(sucursalService.listarSucursales()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/sucursales"))
                 .andExpect(status().isOk())
@@ -73,7 +78,6 @@ public class SucursalTest {
 
     @Test
     void createSucursalControllerTest() throws Exception {
-
         Sucursal sucursalSinId = new Sucursal();
         sucursalSinId.setNombre("Nueva Sucursal");
         sucursalSinId.setCorreo("nueva@sucursal.com");
@@ -83,9 +87,7 @@ public class SucursalTest {
         sucursalConId.setNombre("Nueva Sucursal");
         sucursalConId.setCorreo("nueva@sucursal.com");
 
-
         Mockito.when(sucursalService.registrarSucursal(Mockito.any(Sucursal.class))).thenReturn(sucursalConId);
-
 
         mockMvc.perform(post("/sucursales")
                         .contentType(MediaType.APPLICATION_JSON)

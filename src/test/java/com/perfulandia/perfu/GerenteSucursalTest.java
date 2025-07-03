@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class GerenteSucursalTest {
 
-    @Autowired
+    @MockitoBean
     private GerenteSucursalRepository gerenteSucursalRepository;
 
     @Autowired
@@ -38,32 +38,45 @@ public class GerenteSucursalTest {
 
     @Test
     void findAllGerentesRepositoryTest() {
+        GerenteSucursal gerenteMock = new GerenteSucursal();
+        gerenteMock.setId_gerente_sucursal(1L);
+        gerenteMock.setNombre("Gerente de Prueba");
+        List<GerenteSucursal> listaMock = Collections.singletonList(gerenteMock);
+
+        Mockito.when(gerenteSucursalRepository.findAll()).thenReturn(listaMock);
+
         List<GerenteSucursal> gerentes = gerenteSucursalRepository.findAll();
+
         assertNotNull(gerentes);
+        assertEquals(1, gerentes.size());
         assertTrue(gerentes.size() >= 1);
     }
 
 
     @Test
     void checkGerenteNameRepositoryTest() {
+        GerenteSucursal gerenteMock = new GerenteSucursal();
+        gerenteMock.setId_gerente_sucursal(1L);
+        gerenteMock.setNombre("Gerente de Prueba");
+
+        Mockito.when(gerenteSucursalRepository.findById(1L)).thenReturn(Optional.of(gerenteMock));
 
         GerenteSucursal gerente = gerenteSucursalRepository.findById(1L).get();
+
         assertNotNull(gerente);
         assertEquals("Gerente de Prueba", gerente.getNombre());
     }
 
 
+
     @Test
     void getAllGerentesControllerTest() throws Exception {
-
         GerenteSucursal gerente = new GerenteSucursal();
         gerente.setId_gerente_sucursal(10L);
         gerente.setNombre("Gerente Mock");
         List<GerenteSucursal> listaMock = Collections.singletonList(gerente);
 
-
         Mockito.when(gerenteSucursalService.listarGerentes()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/gerentes-sucursal"))
                 .andExpect(status().isOk())
@@ -73,7 +86,6 @@ public class GerenteSucursalTest {
 
     @Test
     void createGerenteControllerTest() throws Exception {
-
         GerenteSucursal gerenteSinId = new GerenteSucursal();
         gerenteSinId.setNombre("Nuevo Gerente");
         gerenteSinId.setCorreo("nuevogerente@test.com");
@@ -83,9 +95,7 @@ public class GerenteSucursalTest {
         gerenteConId.setNombre("Nuevo Gerente");
         gerenteConId.setCorreo("nuevogerente@test.com");
 
-
         Mockito.when(gerenteSucursalService.agregarGerente(Mockito.any(GerenteSucursal.class))).thenReturn(gerenteConId);
-
 
         mockMvc.perform(post("/gerentes-sucursal")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -25,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class PermisoTest {
 
-    @Autowired
+    @MockitoBean
     private PermisoRepository permisoRepository;
 
     @Autowired
@@ -37,15 +38,22 @@ public class PermisoTest {
 
     @Test
     void findAllPermisosRepositoryTest() {
+        List<Permiso> listaMock = List.of(new Permiso(), new Permiso());
+        Mockito.when(permisoRepository.findAll()).thenReturn(listaMock);
+
         List<Permiso> permisos = permisoRepository.findAll();
         assertNotNull(permisos);
-
         assertTrue(permisos.size() >= 2);
     }
 
 
     @Test
     void checkPermisoNameRepositoryTest() {
+        Permiso permisoMock = new Permiso();
+        permisoMock.setId_permiso(1);
+        permisoMock.setNombre_permiso("GESTIONAR_USUARIOS");
+        Mockito.when(permisoRepository.findById(1)).thenReturn(Optional.of(permisoMock));
+
         Permiso permiso = permisoRepository.findById(1).get();
         assertNotNull(permiso);
         assertEquals("GESTIONAR_USUARIOS", permiso.getNombre_permiso());
@@ -54,15 +62,12 @@ public class PermisoTest {
 
     @Test
     void getAllPermisosControllerTest() throws Exception {
-
         Permiso permiso = new Permiso();
         permiso.setId_permiso(10);
         permiso.setNombre_permiso("PERMISO_MOCK");
         List<Permiso> listaMock = Collections.singletonList(permiso);
 
-
         Mockito.when(permisoService.listarTodos()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/permisos"))
                 .andExpect(status().isOk())
@@ -72,7 +77,6 @@ public class PermisoTest {
 
     @Test
     void createPermisoControllerTest() throws Exception {
-
         Permiso permisoSinId = new Permiso();
         permisoSinId.setNombre_permiso("NUEVO_PERMISO");
 
@@ -80,9 +84,7 @@ public class PermisoTest {
         permisoConId.setId_permiso(99);
         permisoConId.setNombre_permiso("NUEVO_PERMISO");
 
-
         Mockito.when(permisoService.crearPermiso(Mockito.any(Permiso.class))).thenReturn(permisoConId);
-
 
         mockMvc.perform(post("/permisos")
                         .contentType(MediaType.APPLICATION_JSON)

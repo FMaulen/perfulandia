@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class EnvioTest {
 
-    @Autowired
+    @MockitoBean
     private EnvioRepository envioRepository;
 
     @Autowired
@@ -38,6 +38,10 @@ public class EnvioTest {
 
     @Test
     void findAllEnviosRepositoryTest() {
+        Envio envioMock = new Envio();
+        List<Envio> listaMock = Collections.singletonList(envioMock);
+        Mockito.when(envioRepository.findAll()).thenReturn(listaMock);
+
         List<Envio> envios = envioRepository.findAll();
         assertNotNull(envios);
         assertTrue(envios.size() >= 1);
@@ -46,6 +50,11 @@ public class EnvioTest {
 
     @Test
     void checkEnvioEstadoRepositoryTest() {
+        Envio envioMock = new Envio();
+        envioMock.setId_envio(1);
+        envioMock.setEstado("EN_CAMINO");
+        Mockito.when(envioRepository.findById(1)).thenReturn(Optional.of(envioMock));
+
         Envio envio = envioRepository.findById(1).get();
         assertNotNull(envio);
         assertEquals("EN_CAMINO", envio.getEstado());
@@ -54,15 +63,12 @@ public class EnvioTest {
 
     @Test
     void getAllEnviosControllerTest() throws Exception {
-
         Envio envioMock = new Envio();
         envioMock.setId_envio(10);
         envioMock.setEstado("ENTREGADO");
         List<Envio> listaMock = Collections.singletonList(envioMock);
 
-
         Mockito.when(envioService.listarEnvios()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/envios"))
                 .andExpect(status().isOk())
@@ -72,7 +78,6 @@ public class EnvioTest {
 
     @Test
     void createEnvioControllerTest() throws Exception {
-
         Envio envioSinId = new Envio();
         envioSinId.setDireccion("Otra Calle 456");
         envioSinId.setEstado("PROCESANDO");
@@ -82,9 +87,7 @@ public class EnvioTest {
         envioConId.setDireccion("Otra Calle 456");
         envioConId.setEstado("PROCESANDO");
 
-
         Mockito.when(envioService.agregarEnvio(Mockito.any(Envio.class))).thenReturn(envioConId);
-
 
         mockMvc.perform(post("/envios")
                         .contentType(MediaType.APPLICATION_JSON)

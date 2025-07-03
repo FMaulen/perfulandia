@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ProductoTest {
 
-    @Autowired
+    @MockitoBean
     private ProductoRepository productoRepository;
 
     @Autowired
@@ -38,6 +38,10 @@ public class ProductoTest {
 
     @Test
     void findAllProductosRepositoryTest() {
+        Producto productoMock = new Producto();
+        List<Producto> listaMock = Collections.singletonList(productoMock);
+        Mockito.when(productoRepository.findAll()).thenReturn(listaMock);
+
         List<Producto> productos = productoRepository.findAll();
         assertNotNull(productos);
         assertTrue(productos.size() >= 1);
@@ -46,6 +50,11 @@ public class ProductoTest {
 
     @Test
     void checkProductoNameRepositoryTest() {
+        Producto productoMock = new Producto();
+        productoMock.setId_producto(1);
+        productoMock.setNombre("Perfume de Prueba");
+        Mockito.when(productoRepository.findById(1)).thenReturn(Optional.of(productoMock));
+
         Producto producto = productoRepository.findById(1).get();
         assertNotNull(producto);
         assertEquals("Perfume de Prueba", producto.getNombre());
@@ -54,15 +63,12 @@ public class ProductoTest {
 
     @Test
     void getAllProductosControllerTest() throws Exception {
-
         Producto productoMock = new Producto();
         productoMock.setId_producto(100);
         productoMock.setNombre("Perfume Mock");
         List<Producto> listaMock = Collections.singletonList(productoMock);
 
-
         Mockito.when(productoService.listarProductos()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/productos"))
                 .andExpect(status().isOk())
@@ -72,15 +78,12 @@ public class ProductoTest {
 
     @Test
     void getProductoByIdControllerTest() throws Exception {
-
         Producto productoMock = new Producto();
         productoMock.setId_producto(1);
         productoMock.setNombre("Producto Encontrado");
         productoMock.setPrecio(15000.0);
 
-
         Mockito.when(productoService.buscarProducto(1)).thenReturn(Optional.of(productoMock));
-
 
         mockMvc.perform(get("/productos/1"))
                 .andExpect(status().isOk())

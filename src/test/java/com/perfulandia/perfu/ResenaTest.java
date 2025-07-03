@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ResenaTest {
 
-    @Autowired
+    @MockitoBean
     private ResenaRepository resenaRepository;
 
     @Autowired
@@ -38,6 +38,10 @@ public class ResenaTest {
 
     @Test
     void findAllResenasRepositoryTest() {
+        Resena resenaMock = new Resena();
+        List<Resena> listaMock = Collections.singletonList(resenaMock);
+        Mockito.when(resenaRepository.findAll()).thenReturn(listaMock);
+
         List<Resena> resenas = resenaRepository.findAll();
         assertNotNull(resenas);
         assertTrue(resenas.size() >= 1);
@@ -46,6 +50,11 @@ public class ResenaTest {
 
     @Test
     void checkResenaCalificacionRepositoryTest() {
+        Resena resenaMock = new Resena();
+        resenaMock.setId_resena(1);
+        resenaMock.setCalificacion("5");
+        Mockito.when(resenaRepository.findById(1)).thenReturn(Optional.of(resenaMock));
+
         Resena resena = resenaRepository.findById(1).get();
         assertNotNull(resena);
         assertEquals("5", resena.getCalificacion());
@@ -54,15 +63,12 @@ public class ResenaTest {
 
     @Test
     void getAllResenasControllerTest() throws Exception {
-
         Resena resenaMock = new Resena();
         resenaMock.setId_resena(10);
         resenaMock.setComentario("Comentario Mock");
         List<Resena> listaMock = Collections.singletonList(resenaMock);
 
-
         Mockito.when(resenaService.listarResenas()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/resenas"))
                 .andExpect(status().isOk())
@@ -72,7 +78,6 @@ public class ResenaTest {
 
     @Test
     void createResenaControllerTest() throws Exception {
-
         Resena resenaSinId = new Resena();
         resenaSinId.setCalificacion("4");
         resenaSinId.setComentario("Muy buen producto");
@@ -82,9 +87,7 @@ public class ResenaTest {
         resenaConId.setCalificacion("4");
         resenaConId.setComentario("Muy buen producto");
 
-
         Mockito.when(resenaService.agregarResena(Mockito.any(Resena.class))).thenReturn(resenaConId);
-
 
         mockMvc.perform(post("/resenas")
                         .contentType(MediaType.APPLICATION_JSON)

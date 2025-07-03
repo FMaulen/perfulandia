@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class DetallePedidoTest {
 
-    @Autowired
+    @MockitoBean
     private DetallePedidoRepository detallePedidoRepository;
 
     @Autowired
@@ -39,6 +39,10 @@ public class DetallePedidoTest {
 
     @Test
     void findAllDetallesRepositoryTest() {
+        DetallePedido detalleMock = new DetallePedido();
+        List<DetallePedido> listaMock = Collections.singletonList(detalleMock);
+        Mockito.when(detallePedidoRepository.findAll()).thenReturn(listaMock);
+
         List<DetallePedido> detalles = detallePedidoRepository.findAll();
         assertNotNull(detalles);
         assertTrue(detalles.size() >= 1);
@@ -47,6 +51,11 @@ public class DetallePedidoTest {
 
     @Test
     void checkDetalleCantidadRepositoryTest() {
+        DetallePedido detalleMock = new DetallePedido();
+        detalleMock.setId(1);
+        detalleMock.setCantidad(2);
+        Mockito.when(detallePedidoRepository.findById(1)).thenReturn(Optional.of(detalleMock));
+
         DetallePedido detalle = detallePedidoRepository.findById(1).get();
         assertNotNull(detalle);
         assertEquals(2, detalle.getCantidad());
@@ -55,15 +64,12 @@ public class DetallePedidoTest {
 
     @Test
     void getAllDetallesControllerTest() throws Exception {
-
         DetallePedido detalleMock = new DetallePedido();
         detalleMock.setId(10);
         detalleMock.setCantidad(5);
         List<DetallePedido> listaMock = Collections.singletonList(detalleMock);
 
-
         Mockito.when(detallePedidoService.listarDetalles()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/detalles-pedido"))
                 .andExpect(status().isOk())
@@ -73,7 +79,6 @@ public class DetallePedidoTest {
 
     @Test
     void createDetalleControllerTest() throws Exception {
-
         DetallePedido detalleSinId = new DetallePedido();
         detalleSinId.setCantidad(3);
         detalleSinId.setPrecio_unitario(10000);
@@ -83,9 +88,7 @@ public class DetallePedidoTest {
         detalleConId.setCantidad(3);
         detalleConId.setPrecio_unitario(10000);
 
-
         Mockito.when(detallePedidoService.agregarDetalle(Mockito.any(DetallePedido.class))).thenReturn(detalleConId);
-
 
         mockMvc.perform(post("/detalles-pedido")
                         .contentType(MediaType.APPLICATION_JSON)

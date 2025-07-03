@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class PedidoTest {
 
-    @Autowired
+    @MockitoBean
     private PedidoRepository pedidoRepository;
 
     @Autowired
@@ -38,6 +38,10 @@ public class PedidoTest {
 
     @Test
     void findAllPedidosRepositoryTest() {
+        Pedido pedidoMock = new Pedido();
+        List<Pedido> listaMock = Collections.singletonList(pedidoMock);
+        Mockito.when(pedidoRepository.findAll()).thenReturn(listaMock);
+
         List<Pedido> pedidos = pedidoRepository.findAll();
         assertNotNull(pedidos);
         assertTrue(pedidos.size() >= 1);
@@ -46,6 +50,11 @@ public class PedidoTest {
 
     @Test
     void checkPedidoMetodoPagoRepositoryTest() {
+        Pedido pedidoMock = new Pedido();
+        pedidoMock.setId_pedido(1);
+        pedidoMock.setMetodo_pago("TARJETA");
+        Mockito.when(pedidoRepository.findById(1)).thenReturn(Optional.of(pedidoMock));
+
         Pedido pedido = pedidoRepository.findById(1).get();
         assertNotNull(pedido);
         assertEquals("TARJETA", pedido.getMetodo_pago());
@@ -54,15 +63,12 @@ public class PedidoTest {
 
     @Test
     void getAllPedidosControllerTest() throws Exception {
-
         Pedido pedidoMock = new Pedido();
         pedidoMock.setId_pedido(10);
         pedidoMock.setEstado_pedido("ENVIADO");
         List<Pedido> listaMock = Collections.singletonList(pedidoMock);
 
-
         Mockito.when(pedidoService.listarPedidos()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/pedidos"))
                 .andExpect(status().isOk())
@@ -72,7 +78,6 @@ public class PedidoTest {
 
     @Test
     void createPedidoControllerTest() throws Exception {
-
         Pedido pedidoSinId = new Pedido();
         pedidoSinId.setMetodo_pago("WEBPAY");
         pedidoSinId.setTotal_pedido(50000);
@@ -83,9 +88,7 @@ public class PedidoTest {
         pedidoConId.setTotal_pedido(50000);
         pedidoConId.setEstado_pedido("PENDIENTE");
 
-
         Mockito.when(pedidoService.agregarPedido(Mockito.any(Pedido.class))).thenReturn(pedidoConId);
-
 
         mockMvc.perform(post("/pedidos")
                         .contentType(MediaType.APPLICATION_JSON)

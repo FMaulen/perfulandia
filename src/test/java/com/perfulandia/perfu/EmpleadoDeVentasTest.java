@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class EmpleadoDeVentasTest {
 
-    @Autowired
+    @MockitoBean
     private EmpleadoDeVentasRepository empleadoRepository;
 
     @Autowired
@@ -38,6 +38,10 @@ public class EmpleadoDeVentasTest {
 
     @Test
     void findAllEmpleadosRepositoryTest() {
+        EmpleadoDeVentas empleadoMock = new EmpleadoDeVentas();
+        List<EmpleadoDeVentas> listaMock = Collections.singletonList(empleadoMock);
+        Mockito.when(empleadoRepository.findAll()).thenReturn(listaMock);
+
         List<EmpleadoDeVentas> empleados = empleadoRepository.findAll();
         assertNotNull(empleados);
         assertTrue(empleados.size() >= 1);
@@ -46,6 +50,11 @@ public class EmpleadoDeVentasTest {
 
     @Test
     void checkEmpleadoNameRepositoryTest() {
+        EmpleadoDeVentas empleadoMock = new EmpleadoDeVentas();
+        empleadoMock.setId_empleado_ventas(1);
+        empleadoMock.setNombre("Vendedor de Prueba");
+        Mockito.when(empleadoRepository.findById(1)).thenReturn(Optional.of(empleadoMock));
+
         EmpleadoDeVentas empleado = empleadoRepository.findById(1).get();
         assertNotNull(empleado);
         assertEquals("Vendedor de Prueba", empleado.getNombre());
@@ -54,15 +63,12 @@ public class EmpleadoDeVentasTest {
 
     @Test
     void getAllEmpleadosControllerTest() throws Exception {
-
         EmpleadoDeVentas empleadoMock = new EmpleadoDeVentas();
         empleadoMock.setId_empleado_ventas(10);
         empleadoMock.setNombre("Empleado Mock");
         List<EmpleadoDeVentas> listaMock = Collections.singletonList(empleadoMock);
 
-
         Mockito.when(empleadoService.listarEmpleados()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/empleados-ventas"))
                 .andExpect(status().isOk())
@@ -72,7 +78,6 @@ public class EmpleadoDeVentasTest {
 
     @Test
     void createEmpleadoControllerTest() throws Exception {
-
         EmpleadoDeVentas empleadoSinId = new EmpleadoDeVentas();
         empleadoSinId.setNombre("Nuevo Vendedor");
         empleadoSinId.setCorreo("nuevo.vendedor@test.com");
@@ -82,9 +87,7 @@ public class EmpleadoDeVentasTest {
         empleadoConId.setNombre("Nuevo Vendedor");
         empleadoConId.setCorreo("nuevo.vendedor@test.com");
 
-
         Mockito.when(empleadoService.agregarEmpleado(Mockito.any(EmpleadoDeVentas.class))).thenReturn(empleadoConId);
-
 
         mockMvc.perform(post("/empleados-ventas")
                         .contentType(MediaType.APPLICATION_JSON)

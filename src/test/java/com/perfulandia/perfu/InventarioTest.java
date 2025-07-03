@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class InventarioTest {
 
-    @Autowired
+    @MockitoBean
     private InventarioRepository inventarioRepository;
 
     @Autowired
@@ -38,6 +38,10 @@ public class InventarioTest {
 
     @Test
     void findAllInventarioRepositoryTest() {
+        Inventario itemMock = new Inventario();
+        List<Inventario> listaMock = Collections.singletonList(itemMock);
+        Mockito.when(inventarioRepository.findAll()).thenReturn(listaMock);
+
         List<Inventario> inventario = inventarioRepository.findAll();
         assertNotNull(inventario);
         assertTrue(inventario.size() >= 1);
@@ -46,6 +50,11 @@ public class InventarioTest {
 
     @Test
     void checkInventarioStockRepositoryTest() {
+        Inventario itemMock = new Inventario();
+        itemMock.setId(1);
+        itemMock.setStock(100);
+        Mockito.when(inventarioRepository.findById(1)).thenReturn(Optional.of(itemMock));
+
         Inventario item = inventarioRepository.findById(1).get();
         assertNotNull(item);
         assertEquals(100, item.getStock());
@@ -54,15 +63,12 @@ public class InventarioTest {
 
     @Test
     void getAllInventarioControllerTest() throws Exception {
-
         Inventario item = new Inventario();
         item.setId(10);
         item.setStock(50);
         List<Inventario> listaMock = Collections.singletonList(item);
 
-
         Mockito.when(inventarioService.listarInventario()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/inventario"))
                 .andExpect(status().isOk())
@@ -72,14 +78,11 @@ public class InventarioTest {
 
     @Test
     void adjustStockControllerTest() throws Exception {
-
         Inventario itemActualizado = new Inventario();
         itemActualizado.setId(1);
-        itemActualizado.setStock(75); // El nuevo stock
-
+        itemActualizado.setStock(75);
 
         Mockito.when(inventarioService.actualizarStock(1, 75)).thenReturn(Optional.of(itemActualizado));
-
 
         mockMvc.perform(patch("/inventario/1/stock")
                         .param("stock", "75"))

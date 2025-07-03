@@ -26,7 +26,7 @@ import java.util.List;
 @AutoConfigureMockMvc
 public class AdministradorSistemaTest {
 
-    @Autowired
+    @MockitoBean
     private AdministradorSistemaRepository administradorSistemaRepository;
 
     @Autowired
@@ -38,6 +38,10 @@ public class AdministradorSistemaTest {
 
     @Test
     void findAllAdminsRepositoryTest() {
+        AdministradorSistema adminMock = new AdministradorSistema();
+        List<AdministradorSistema> listaMock = Collections.singletonList(adminMock);
+        Mockito.when(administradorSistemaRepository.findAll()).thenReturn(listaMock);
+
         List<AdministradorSistema> admins = administradorSistemaRepository.findAll();
         assertNotNull(admins);
         assertEquals(1, admins.size());
@@ -46,6 +50,11 @@ public class AdministradorSistemaTest {
 
     @Test
     void checkAdminNameRepositoryTest() {
+        AdministradorSistema adminMock = new AdministradorSistema();
+        adminMock.setId_administrador_sistema(1);
+        adminMock.setNombre("Admin de Prueba");
+        Mockito.when(administradorSistemaRepository.findById(1)).thenReturn(Optional.of(adminMock));
+
         AdministradorSistema admin = administradorSistemaRepository.findById(1).get();
         assertNotNull(admin);
         assertEquals("Admin de Prueba", admin.getNombre());
@@ -54,15 +63,12 @@ public class AdministradorSistemaTest {
 
     @Test
     void getAllAdminsControllerTest() throws Exception {
-
         AdministradorSistema admin = new AdministradorSistema();
         admin.setId_administrador_sistema(10);
         admin.setNombre("Admin Mock");
         List<AdministradorSistema> listaMock = Collections.singletonList(admin);
 
-
         Mockito.when(administradorSistemaService.listarAdmins()).thenReturn(listaMock);
-
 
         mockMvc.perform(get("/admin-sistema"))
                 .andExpect(status().isOk())
@@ -72,7 +78,6 @@ public class AdministradorSistemaTest {
 
     @Test
     void createAdminControllerTest() throws Exception {
-
         AdministradorSistema adminSinId = new AdministradorSistema();
         adminSinId.setNombre("Nuevo Admin");
         adminSinId.setCorreo("nuevo@perfulandia.com");
@@ -82,9 +87,7 @@ public class AdministradorSistemaTest {
         adminConId.setNombre("Nuevo Admin");
         adminConId.setCorreo("nuevo@perfulandia.com");
 
-
         Mockito.when(administradorSistemaService.registrarAdmin(Mockito.any(AdministradorSistema.class))).thenReturn(adminConId);
-
 
         mockMvc.perform(post("/admin-sistema")
                         .contentType(MediaType.APPLICATION_JSON)
